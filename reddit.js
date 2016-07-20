@@ -151,6 +151,22 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
           }
         }
       );
+    },
+    getSinglePost: function(userId, callback){
+      conn.query(`
+      SELECT *
+      FROM posts
+      WHERE id = ?`
+      , [userId], //these commas are actually crazy important. They go between the separate arguments
+      function(err, results) {
+        if (err) {
+          callback(err);
+        }
+        else {
+          callback(null, results);
+        }
+      }
+      )
     }
   }
 }
