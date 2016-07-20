@@ -22,7 +22,12 @@ This file contains two `CREATE TABLE` statements, which we are already used to.
 
 ### `index.js`
 This is the "main" file of our application, meaning it's the one we will run to get things done.
-First, we load the `mysql` NodeJS library. This library will let us communicate with MySQL similarly
+First, we load the `mysql` NodeJS library. 
+[//as seen at the top of index.js
+// load the mysql library
+var mysql = require('mysql');
+]
+This library will let us communicate with MySQL similarly
 to what we have been doing with the command-line: writing queries and getting responses.
 
 Next, we create a connection to a MySQL server. On Cloud9, our database does not need to be 100% secure,

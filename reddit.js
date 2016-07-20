@@ -1,7 +1,7 @@
 var bcrypt = require('bcrypt');
 var HASH_ROUNDS = 10;
 
-module.exports = function RedditAPI(conn) {
+module.exports = function RedditAPI(conn) {//the conn that you pass here must be a valid mysql connection
   return {
     createUser: function(user, callback) {
       
@@ -46,7 +46,7 @@ module.exports = function RedditAPI(conn) {
                       2. Insert the user in the DB
                       3a. If the insert fails, report the error to the caller
                       3b. If the insert succeeds, re-fetch the user from the DB
-                      4. If the re-fetch succeeds, return the object to the caller
+                      4. If the re-fetch succeeds, return the object to the caller. the caller is the callback fn
                       */
                         callback(null, result[0]);
                     }
@@ -95,9 +95,11 @@ module.exports = function RedditAPI(conn) {
       var offset = (options.page || 0) * limit;
       
       conn.query(`
-        SELECT id, title, url, userId, createdAt, updatedAt
-        FROM posts
-        ORDER BY createdAt DESC
+        SELECT p.id as postId, p.title, p.url, p.createdAt as postCreateAt, p.updatedAt postUpdatedAt, u.id as userId, u.username, 
+        u.createdAt as userCreatedAt, u.updatedAt as userUpdatedAt
+        FROM posts as p
+        JOIN users as u ON p.userId=u.id
+        ORDER BY postCreateAt DESC
         LIMIT ? OFFSET ?`
         , [limit, offset],
         function(err, results) {
@@ -105,7 +107,23 @@ module.exports = function RedditAPI(conn) {
             callback(err);
           }
           else {
-            callback(null, results);
+            var mappedData = results.map(function(ele){
+              return {
+                id: ele.postId,
+                title: ele.title,
+                url: ele.url,
+                createdAt: ele.postCreateAt,
+                updatedAt: ele.postUpdatedAt,
+                user: {
+                  id: ele.userId,
+                  username: ele.username,
+                  createdAt: ele.userCreatedAt,
+                  updatedAt: ele.userUpdatedAt
+                }
+              }
+            })
+          
+            callback(null, mappedData);
           }
         }
       );
