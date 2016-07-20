@@ -127,6 +127,30 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
           }
         }
       );
+    },
+    getAllPostsForUser: function(userId, options, callback){
+      if (!callback) {
+        callback = options;
+        options = {};
+      }
+      var limit = options.numPerPage || 25; // if options.numPerPage is "falsy" then use 25
+      var offset = (options.page || 0) * limit;
+      
+        conn.query(`
+        SELECT * 
+        FROM posts 
+        WHERE posts.userId = ?
+        LIMIT ? OFFSET ?`
+        , [userId, limit, offset],//this line comes back to ? explanation from Ziad's notes.
+        function(err, results) {
+          if (err) {
+            callback(err);
+          }
+          else {
+            callback(null, results);
+          }
+        }
+      );
     }
   }
 }

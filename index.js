@@ -15,7 +15,8 @@ var connection = mysql.createConnection({
 var reddit = require('./reddit'); //'./reddit' is the same as './reddit.js'
 var redditAPI = reddit(connection);
 
-redditAPI.getAllPosts(function (err, res){
+
+redditAPI.getAllPostsForUser(4, function (err, res){
   if (err){
     console.log(err);
   }
@@ -23,6 +24,17 @@ redditAPI.getAllPosts(function (err, res){
     console.log(res);
   }
 })
+
+
+
+// redditAPI.getAllPosts(function (err, res){
+//   if (err){
+//     console.log(err);
+//   }
+//   else {
+//     console.log(res);
+//   }
+// })
 
 // It's request time!
 // redditAPI.createUser({
