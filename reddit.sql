@@ -23,3 +23,15 @@ CREATE TABLE `posts` (
   KEY `userId` (`userId`),
   CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- a primary key is unique
+
+CREATE TABLE `subreddits` (
+  `id` INT AUTO_INCREMENT,
+  `name` varchar(30) NOT NULL,
+  `description` varchar(200) DEFAULT NULL,
+  `createdAt` DATETIME NOT NULL,
+  `updatedAt` TIMESTAMP NOT NULL,
+  PRIMARY KEY (`id`), 
+  UNIQUE KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
