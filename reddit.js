@@ -71,7 +71,10 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
             the post and send it to the caller!
             */
             conn.query(
-              'SELECT id,title,url,userId, createdAt, updatedAt FROM posts WHERE id = ?', [result.insertId],
+              `
+              SELECT id,title,url,userId, createdAt, updatedAt 
+              FROM posts 
+              WHERE id = ?`, [result.insertId],
               function(err, result) {
                 if (err) {
                   callback(err);
@@ -95,24 +98,25 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
       var offset = (options.page || 0) * limit;
       
       conn.query(`
-        SELECT p.id as postId, p.title, p.url, p.createdAt as postCreateAt, p.updatedAt postUpdatedAt, u.id as userId, u.username, 
-        u.createdAt as userCreatedAt, u.updatedAt as userUpdatedAt
+        SELECT 
+          p.id as postId, p.title, p.url, p.createdAt as postCreatedAt, p.updatedAt postUpdatedAt, 
+          u.id as userId, u.username, u.createdAt as userCreatedAt, u.updatedAt as userUpdatedAt
         FROM posts as p
         JOIN users as u ON p.userId=u.id
         ORDER BY postCreateAt DESC
         LIMIT ? OFFSET ?`
         , [limit, offset],
-        function(err, results) {
+        function(err, posts) {
           if (err) {
             callback(err);
           }
           else {
-            var mappedData = results.map(function(ele){
+            posts = posts.map(function(ele){
               return {
                 id: ele.postId,
                 title: ele.title,
                 url: ele.url,
-                createdAt: ele.postCreateAt,
+                createdAt: ele.postCreatedAt,
                 updatedAt: ele.postUpdatedAt,
                 user: {
                   id: ele.userId,
@@ -120,13 +124,12 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
                   createdAt: ele.userCreatedAt,
                   updatedAt: ele.userUpdatedAt
                 }
-              }
-            })
-          
-            callback(null, mappedData);
+              };
+            });
+            callback(null, posts);
           }
         }
       );
     }
-  }
-}
+  };
+};

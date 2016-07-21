@@ -27,21 +27,13 @@ CREATE TABLE `posts` (
 
 CREATE TABLE `subreddits` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `name` varchar(30) NOT NULL,
+  `name` varchar(30) UNIQUE NOT NULL,
   `description` varchar(200) DEFAULT NULL,
-  `createdAt` TIMESTAMP,
+  `createdAt` TIMESTAMP, -- Ziad did DATETIME, below as well
   `updatedAt` TIMESTAMP,
-  UNIQUE (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-mysql> describe subreddits;
-+-------------+--------------+------+-----+---------------------+-----------------------------+
-| Field       | Type         | Null | Key | Default             | Extra                       |
-+-------------+--------------+------+-----+---------------------+-----------------------------+
-| id          | int(11)      | NO   | PRI | NULL                | auto_increment              |
-| name        | varchar(30)  | NO   |     | NULL                |                             |
-| description | varchar(200) | YES  |     | NULL                |                             |
-| createdAt   | timestamp    | NO   |     | CURRENT_TIMESTAMP   | on update CURRENT_TIMESTAMP |
-| updatedAt   | timestamp    | NO   |     | 0000-00-00 00:00:00 |                             |
-+-------------+--------------+------+-----+---------------------+-----------------------------+
-5 rows in set (0.00 sec)
+
+ALTER TABLE posts ADD subredditIt_INT;
