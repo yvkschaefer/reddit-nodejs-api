@@ -86,8 +86,8 @@ function getAllSubreddits() {
 //   }
 // })
 
-function getAllPosts(){
-redditAPI.getAllPosts(function (err, res){
+function getAllPosts(sort){
+redditAPI.getAllPosts(sort, function (err, res){
   if (err){
     console.log(err);
   }
@@ -97,7 +97,7 @@ redditAPI.getAllPosts(function (err, res){
 });
 }
 
-getAllPosts();
+getAllPosts('top');
 
 
 // It's request time!

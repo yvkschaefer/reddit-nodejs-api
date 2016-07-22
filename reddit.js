@@ -90,12 +90,20 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
     },
 
 
-    getAllPosts: function(options, callback) {
+    getAllPosts: function(sortingMethod, options, callback) {
       // In case we are called without an options parameter, shift all the parameters manually
       if (!callback) {
         callback = options;
         options = {};
       }
+      
+
+      var sortMethod;
+      if (sortingMethod === 'top'){
+        sortMethod = 'voteScore'
+      }
+      
+      
       var limit = options.numPerPage || 25; // if options.numPerPage is "falsy" then use 25
       var offset = (options.page || 0) * limit;
 
@@ -111,8 +119,8 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         JOIN subreddits as s ON p.subredditId=s.id
         JOIN votes as v ON p.id=v.postId
         GROUP BY postId
-        ORDER BY postCreatedAt DESC
-        LIMIT ? OFFSET ?`, [limit, offset],
+        ORDER BY ?? DESC
+        LIMIT ? OFFSET ?`, [sortMethod,limit, offset],
         function(err, results) {
           if (err) {
             callback(err);
