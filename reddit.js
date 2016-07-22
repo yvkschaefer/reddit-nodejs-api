@@ -100,11 +100,13 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
       var offset = (options.page || 0) * limit;
       
       conn.query(`
-        SELECT p.id as postId, p.title, p.url, p.createdAt as postCreateAt, p.updatedAt postUpdatedAt, u.id as userId, u.username, 
-        u.createdAt as userCreatedAt, u.updatedAt as userUpdatedAt
+        SELECT p.id as postId, p.title, p.url, p.createdAt as postCreatedAt, p.updatedAt postUpdatedAt, 
+        u.id as userId, u.username, u.createdAt as userCreatedAt, u.updatedAt as userUpdatedAt
         FROM posts as p
         JOIN users as u ON p.userId=u.id
         ORDER BY postCreateAt DESC
+        SELECT s.id as subredditId, s.name as subredditName, s.description as subredditDescription, s.createdAt as subredditCreatedAt, s.updatedAt as subredditUpdatedAt
+        JOIN subreddits as s ON p.subredditId=s.id
         LIMIT ? OFFSET ?`
         , [limit, offset],
         function(err, results) {
@@ -112,18 +114,18 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
             callback(err);
           }
           else {
-            var mappedData = results.map(function(ele){
+            var mappedData = results.map(function(obj){
               return {
-                id: ele.postId,
-                title: ele.title,
-                url: ele.url,
-                createdAt: ele.postCreateAt,
-                updatedAt: ele.postUpdatedAt,
+                id: obj.postId,
+                title: obj.title,
+                url: obj.url,
+                createdAt: obj.postCreatedAt,
+                updatedAt: obj.postUpdatedAt,
                 user: {
-                  id: ele.userId,
-                  username: ele.username,
-                  createdAt: ele.userCreatedAt,
-                  updatedAt: ele.userUpdatedAt
+                  id: obj.userId,
+                  username: obj.username,
+                  createdAt: obj.userCreatedAt,
+                  updatedAt: obj.userUpdatedAt
                 }
               };
             });

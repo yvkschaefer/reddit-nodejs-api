@@ -66,15 +66,19 @@ function getAllSubreddits() {
 //   }
 // })
 
+function getAllPosts(){
+redditAPI.getAllPosts(function (err, res){
+  if (err){
+    console.log(err);
+  }
+  else {
+    console.log(res);
+  }
+});
+}
 
-// redditAPI.getAllPosts(function (err, res){
-//   if (err){
-//     console.log(err);
-//   }
-//   else {
-//     console.log(res);
-//   }
-// })
+getAllPosts();
+
 
 // It's request time!
 // redditAPI.createUser({
@@ -119,4 +123,4 @@ function createPost (){
   })
 };
 
-createPost();
+//createPost();
