@@ -16,14 +16,45 @@ var reddit = require('./reddit'); //'./reddit' is the same as './reddit.js'
 var redditAPI = reddit(connection);
 
 
-redditAPI.getSinglePost(2, function(err, res){ //make sure you put a postId parameter in before function when you call
-  if (err){
-    console.log(err);
-  }
-  else {
-    console.log(res);
-  }
-})
+function getAllSubreddits() {
+
+  redditAPI.getAllSubreddits (function (err, res){
+    if (err) {
+      console.log(err);
+    }
+    else {
+      console.log(res);
+    }
+  });
+  
+}
+
+//getAllSubreddits();
+
+
+
+// var objTest = {
+//   name: 'Lothar',
+//   description: 'retired'
+// }
+
+// redditAPI.createSubreddit(objTest, function(err, res){
+//   if (err){
+//     console.log(err);
+//   }
+//   else {
+//     console.log(res);
+//   }
+// })
+
+// redditAPI.getSinglePost( function(err, res){ //make sure you put a postId parameter in before function when you call
+//   if (err){
+//     console.log(err);
+//   }
+//   else {
+//     console.log(res);
+//   }
+// })
 
 
 // redditAPI.getAllPostsForUser(function (err, res){
@@ -47,18 +78,20 @@ redditAPI.getSinglePost(2, function(err, res){ //make sure you put a postId para
 
 // It's request time!
 // redditAPI.createUser({
-//   username: 'hello25',
-//   password: 'xxx'
+//   username: 'hello9000',
+//   password: 'xx'
 // }, function(err, user) {
+//   // console.log(user);
 //   if (err) {
 //     console.log(err);
 //   }
 //   else {
 //     redditAPI.createPost({
-//       title: 'hi reddit!',
-//       url: 'https://www.reddit.com',
+//       title: 'hi reddits!',
+//       url: 'https://www.reddits.com',
 //       userId: user.id
-//     }, function(err, post) {
+//     },5, 
+//     function(err, post) {
 //       if (err) {
 //         console.log(err);
 //       }
@@ -66,5 +99,24 @@ redditAPI.getSinglePost(2, function(err, res){ //make sure you put a postId para
 //         console.log(post);
 //       }
 //     });
+    
 //   }
 // });
+
+function createPost (){
+  redditAPI.createPost({
+    title:'hello',
+    url:'www.reddit.com',
+    userId: 5
+  },4,
+  function(err, post){
+    if(err){
+      console.log(err);
+    }
+    else {
+      console.log(post);
+    }
+  })
+};
+
+createPost();

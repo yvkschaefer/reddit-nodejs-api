@@ -58,10 +58,11 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
         }
       });
     },
-    createPost: function(post, callback) {
+    createPost: function(post, subredditId, callback) {
       conn.query(
-        'INSERT INTO posts (userId, title, url, createdAt) VALUES (?, ?, ?, ?)', [post.userId, post.title, post.url, new Date()],
+        'INSERT INTO posts (userId, title, url, createdAt, subredditId) VALUES (?, ?, ?, ?, ?)', [post.userId, post.title, post.url, new Date(), subredditId],
         function(err, result) {
+          console.log("HELLO", subredditId);
           if (err) {
             callback(err);
           }
@@ -71,8 +72,10 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
             the post and send it to the caller!
             */
             conn.query(
-              'SELECT id,title,url,userId, createdAt, updatedAt FROM posts WHERE id = ?', [result.insertId],
+              'SELECT id,title,url,userId, createdAt, updatedAt, subredditId FROM posts WHERE id = ?', [result.insertId],
               function(err, result) {
+                //console.log("HELLO", result);
+                
                 if (err) {
                   callback(err);
                 }
@@ -85,6 +88,8 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
         }
       );
     },
+    
+    
     getAllPosts: function(options, callback) {
       // In case we are called without an options parameter, shift all the parameters manually
       if (!callback) {
@@ -120,8 +125,8 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
                   createdAt: ele.userCreatedAt,
                   updatedAt: ele.userUpdatedAt
                 }
-              }
-            })
+              };
+            });
           
             callback(null, mappedData);
           }
@@ -166,7 +171,49 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
           callback(null, results);
         }
       }
-      )
+      );
+    },
+    createSubreddit: function(subreddit, callback){
+      conn.query(`
+      INSERT INTO subreddits (name, description, createdAt) 
+      VALUES (?, ?, ?)
+      `,[subreddit.name, subreddit.description, new Date()],
+      function (err, result) {
+        if (err) {
+          callback (err);
+        }
+        else {
+          conn.query (
+            `SELECT name, description
+            FROM subreddits
+            WHERE id=?
+            `,[result.insertId],
+            function(err, result){
+              if (err) {
+                callback(err);
+              }
+              else {
+                callback(null, result[0]);
+              }
+            }
+          )}  
+        }
+      );
+    },
+    getAllSubreddits: function(callback){
+      conn.query(`
+      SELECT * FROM subreddits
+      ORDER BY createdAt DESC
+      `,
+      function(err, result){
+        if (err) {
+          callback(err);
+        }
+        else {
+          callback(null, result);
+        }
+      }
+      );
     }
-  }
-}
+  };
+};
