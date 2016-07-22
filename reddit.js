@@ -1,10 +1,10 @@
 var bcrypt = require('bcrypt');
 var HASH_ROUNDS = 10;
 
-module.exports = function RedditAPI(conn) {//the conn that you pass here must be a valid mysql connection
+module.exports = function RedditAPI(conn) { //the conn that you pass here must be a valid mysql connection
   return {
     createUser: function(user, callback) {
-      
+
       // first we have to hash the password...
       bcrypt.hash(user.password, HASH_ROUNDS, function(err, hashedPassword) {
         if (err) {
@@ -12,7 +12,7 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
         }
         else {
           conn.query(
-            'INSERT INTO users (username,password, createdAt) VALUES (?, ?, ?)', [user.username, hashedPassword, new Date()],
+            'INSERT INTO users (username,password, createdAt, updatedAt) VALUES (?, ?, ?, ?)', [user.username, hashedPassword, new Date(), new Date()],
             function(err, result) {
               if (err) {
                 /*
@@ -48,7 +48,7 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
                       3b. If the insert succeeds, re-fetch the user from the DB
                       4. If the re-fetch succeeds, return the object to the caller. the caller is the callback fn
                       */
-                        callback(null, result[0]);
+                      callback(null, result[0]);
                     }
                   }
                 );
@@ -60,7 +60,7 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
     },
     createPost: function(post, subredditId, callback) {
       conn.query(
-        'INSERT INTO posts (userId, title, url, createdAt, subredditId) VALUES (?, ?, ?, ?, ?)', [post.userId, post.title, post.url, new Date(), subredditId],
+        'INSERT INTO posts (userId, title, url, createdAt, updatedAt, subredditId) VALUES (?, ?, ?, ?, ?, ?)', [post.userId, post.title, post.url, new Date(), new Date(), subredditId],
         function(err, result) {
           console.log("HELLO", subredditId);
           if (err) {
@@ -75,7 +75,7 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
               'SELECT id,title,url,userId, createdAt, updatedAt, subredditId FROM posts WHERE id = ?', [result.insertId],
               function(err, result) {
                 //console.log("HELLO", result);
-                
+
                 if (err) {
                   callback(err);
                 }
@@ -88,8 +88,8 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
         }
       );
     },
-    
-    
+
+
     getAllPosts: function(options, callback) {
       // In case we are called without an options parameter, shift all the parameters manually
       if (!callback) {
@@ -98,25 +98,29 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
       }
       var limit = options.numPerPage || 25; // if options.numPerPage is "falsy" then use 25
       var offset = (options.page || 0) * limit;
-      
+
       conn.query(`
-        SELECT p.id as postId, p.title, p.url, p.createdAt as postCreatedAt, p.updatedAt postUpdatedAt, 
-        u.id as userId, u.username, u.createdAt as userCreatedAt, u.updatedAt as userUpdatedAt
+        SELECT 
+          p.id as postId, p.title, p.url, p.createdAt as postCreatedAt, p.updatedAt as postUpdatedAt, 
+          u.id as userId, u.username, u.createdAt as userCreatedAt, u.updatedAt as userUpdatedAt,
+          s.id as subredditId, s.name as subredditName, s.description as subredditDescription, s.createdAt as subredditCreatedAt, s.updatedAt as subredditUpdatedAt,
+          sum(v.vote) as voteScore
+          
         FROM posts as p
         JOIN users as u ON p.userId=u.id
-        ORDER BY postCreateAt DESC
-        SELECT s.id as subredditId, s.name as subredditName, s.description as subredditDescription, s.createdAt as subredditCreatedAt, s.updatedAt as subredditUpdatedAt
         JOIN subreddits as s ON p.subredditId=s.id
-        LIMIT ? OFFSET ?`
-        , [limit, offset],
+        JOIN votes as v ON p.id=v.postId
+        GROUP BY postId
+        ORDER BY postCreatedAt DESC
+        LIMIT ? OFFSET ?`, [limit, offset],
         function(err, results) {
           if (err) {
             callback(err);
           }
           else {
-            var mappedData = results.map(function(obj){
+            var mappedData = results.map(function(obj) {
               return {
-                id: obj.postId,
+                postId: obj.postId,
                 title: obj.title,
                 url: obj.url,
                 createdAt: obj.postCreatedAt,
@@ -126,29 +130,35 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
                   username: obj.username,
                   createdAt: obj.userCreatedAt,
                   updatedAt: obj.userUpdatedAt
-                }
+                },
+                subreddits: {
+                  id: obj.subredditId,
+                  name: obj.subredditName,
+                  description: obj.subredditDescription,
+                  createdAt: obj.subredditCreatedAt,
+                  updatedAt: obj.subredditUpdatedAt
+                },
+                voteScore: obj.voteScore
               };
             });
-          
             callback(null, mappedData);
           }
         }
       );
     },
-    getAllPostsForUser: function(userId, options, callback){
+    getAllPostsForUser: function(userId, options, callback) {
       if (!callback) {
         callback = options;
         options = {};
       }
       var limit = options.numPerPage || 25; // if options.numPerPage is "falsy" then use 25
       var offset = (options.page || 0) * limit;
-      
-        conn.query(`
+
+      conn.query(`
         SELECT * 
         FROM posts 
         WHERE posts.userId = ?
-        LIMIT ? OFFSET ?`
-        , [userId, limit, offset],//this line comes back to ? explanation from Ziad's notes.
+        LIMIT ? OFFSET ?`, [userId, limit, offset], //this line comes back to ? explanation from Ziad's notes.
         function(err, results) {
           if (err) {
             callback(err);
@@ -159,63 +169,95 @@ module.exports = function RedditAPI(conn) {//the conn that you pass here must be
         }
       );
     },
-    getSinglePost: function(userId, callback){
+    getSinglePost: function(userId, callback) {
       conn.query(`
       SELECT *
       FROM posts
-      WHERE id = ?`
-      , [userId], //these commas are actually crazy important. They go between the separate arguments
-      function(err, results) {
-        if (err) {
-          callback(err);
+      WHERE id = ?`, [userId], //these commas are actually crazy important. They go between the separate arguments
+        function(err, results) {
+          if (err) {
+            callback(err);
+          }
+          else {
+            callback(null, results);
+          }
         }
-        else {
-          callback(null, results);
-        }
-      }
       );
     },
-    createSubreddit: function(subreddit, callback){
+    createSubreddit: function(subreddit, callback) {
       conn.query(`
       INSERT INTO subreddits (name, description, createdAt) 
       VALUES (?, ?, ?)
-      `,[subreddit.name, subreddit.description, new Date()],
-      function (err, result) {
-        if (err) {
-          callback (err);
-        }
-        else {
-          conn.query (
-            `SELECT name, description
+      `, [subreddit.name, subreddit.description, new Date()],
+        function(err, result) {
+          if (err) {
+            callback(err);
+          }
+          else {
+            conn.query(
+              `SELECT name, description
             FROM subreddits
             WHERE id=?
-            `,[result.insertId],
-            function(err, result){
-              if (err) {
-                callback(err);
+            `, [result.insertId],
+              function(err, result) {
+                if (err) {
+                  callback(err);
+                }
+                else {
+                  callback(null, result[0]);
+                }
               }
-              else {
-                callback(null, result[0]);
-              }
-            }
-          )}  
+            )
+          }
         }
       );
     },
-    getAllSubreddits: function(callback){
+    getAllSubreddits: function(callback) {
       conn.query(`
       SELECT * FROM subreddits
       ORDER BY createdAt DESC
       `,
-      function(err, result){
-        if (err) {
-          callback(err);
+        function(err, result) {
+          if (err) {
+            callback(err);
+          }
+          else {
+            callback(null, result);
+          }
         }
-        else {
-          callback(null, result);
-        }
-      }
       );
+    },
+    createOrUpdateVote: function(vote, callback) {
+      if (vote.vote === -1 || vote.vote === 0 || vote.vote === 1) {
+        //callback(null, "works well")
+
+        conn.query(`
+        INSERT INTO votes (postId, userId, vote, createdAt, updatedAt)
+        VALUES (?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE vote= ?
+        `, [vote.postId, vote.userId, vote.vote, new Date(), new Date(), vote.vote],
+          function(err, result) {
+            if (err) {
+              callback(err);
+            }
+            else {
+              conn.query(`
+            SELECT * FROM votes
+            `, function(err, result) {
+                if (err) {
+                  callback(err);
+                }
+                else {
+                  callback(null, result);
+                }
+              })
+            }
+          }
+        )
+      }
+      else {
+        callback(null, 'oops, the vote should be either -1 to downvote, 1 to upvote, or 0 to cancel a vote');
+      }
     }
   };
 };

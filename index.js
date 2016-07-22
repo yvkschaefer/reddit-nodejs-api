@@ -15,6 +15,26 @@ var connection = mysql.createConnection({
 var reddit = require('./reddit'); //'./reddit' is the same as './reddit.js'
 var redditAPI = reddit(connection);
 
+var vote = {
+  postId : 12,
+  userId : 8,
+  vote : 1
+};
+
+function createOrUpdateVote(vote){
+  redditAPI.createOrUpdateVote (vote, function (err, res){
+    if (err) {
+      console.log(err);
+    }
+    else {
+      console.log(res);
+    }
+  });  
+}
+
+// createOrUpdateVote(vote);
+
+
 
 function getAllSubreddits() {
 
@@ -109,10 +129,10 @@ getAllPosts();
 
 function createPost (){
   redditAPI.createPost({
-    title:'hello',
+    title:'HiHi',
     url:'www.reddit.com',
-    userId: 5
-  },4,
+    userId: 8
+  },2,
   function(err, post){
     if(err){
       console.log(err);
@@ -123,4 +143,4 @@ function createPost (){
   })
 };
 
-//createPost();
+// createPost();

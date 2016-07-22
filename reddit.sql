@@ -59,3 +59,16 @@ mysql> show create table subreddits;
 1 row in set (0.00 sec)
 
 mysql> 
+
+
+CREATE TABLE `votes` (
+  `userId` INT,
+  `postId` INT,
+  `vote` TINYINT,
+  `createdAt` DATETIME,
+  `updatedAt` DATETIME,
+  PRIMARY KEY (`userId`, `postId`),
+  FOREIGN KEY (`userId`) REFERENCES `users`(`id`),
+  FOREIGN KEY (`postId`) REFERENCES `posts`(`id`)
+);
+
