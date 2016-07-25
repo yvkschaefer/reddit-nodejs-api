@@ -106,8 +106,8 @@ app.get('/posts', function(request, response) {
             
             function createLi(post){
                 return `
-                <li>
-                    <h3><p>
+                <li class = "content-item">
+                    <h3 class="content-item__title"><p>
                         Post Title: ${post.title}
                     </p>
                     <a href= ${post.url}>${post.url}</a>
