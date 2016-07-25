@@ -4,12 +4,31 @@ var mysql = require('mysql');
 var app = express();
 
 
-app.get('/hello', function (request, response){
-    console.log('I received a request');
-    response.send('<h1>Hello World!</h1>');
+
+//Exercise 1: Getting started!
+
+//Create a web server that can listen to requests for /hello, and respond with some HTML that 
+//says <h1>Hello World!</h1>
+
+// app.get('/hello', function (request, response){
+//     console.log('I received a request!');
+//     response.send('<h1>Hello World!</h1>');
+// });
+
+//Exercise 2: A wild parameter has appeared!
+
+//Create a web server that can listen to requests for /hello?name=firstName, and respond with 
+//some HTML that says <h1>Hello _name_!</h1>. For example, if a client requests /hello/John, the 
+//server should respond with <h1>Hello John!</h1>.
+
+app.get('/hello', function(request, response){
+    console.log(request.query);
+    
+    var firstName = request.query.name;
+    response.send('<h1>Hello ' + firstName + '!</h1>');
+
 });
 
-app.listen(process.env.PORT);
 
 
 var Classes = Object.create(null);
@@ -163,3 +182,4 @@ function loadClass(className) {
 }
 
 
+app.listen(process.env.PORT);
