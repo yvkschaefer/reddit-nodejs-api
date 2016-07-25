@@ -102,7 +102,9 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
       if (sortingMethod === 'top'){
         sortMethod = 'voteScore'
       }
-      
+      if (sortingMethod === 'hot'){
+        sortMethod = 'voteScore'/'p.createdAt'
+      }
       
       var limit = options.numPerPage || 25; // if options.numPerPage is "falsy" then use 25
       var offset = (options.page || 0) * limit;
