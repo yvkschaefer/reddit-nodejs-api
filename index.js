@@ -97,41 +97,46 @@ redditAPI.getAllPosts(sort, function (err, res){
 });
 }
 
-getAllPosts('top');
+//getAllPosts('top');
 
 
 // It's request time!
-// redditAPI.createUser({
-//   username: 'hello9000',
-//   password: 'xx'
-// }, function(err, user) {
-//   // console.log(user);
-//   if (err) {
-//     console.log(err);
-//   }
-//   else {
-//     redditAPI.createPost({
-//       title: 'hi reddits!',
-//       url: 'https://www.reddits.com',
-//       userId: user.id
-//     },5, 
-//     function(err, post) {
-//       if (err) {
-//         console.log(err);
-//       }
-//       else {
-//         console.log(post);
-//       }
-//     });
+
+function createUser(){
+
+redditAPI.createUser({
+  username: 'John Smith',
+  password: 'xx'
+}, function(err, user) {
+  // console.log(user);
+  if (err) {
+    console.log(err);
+  }
+  else {
+    redditAPI.createPost({
+      title: 'hi reddits!',
+      url: 'https://www.reddits.com',
+      userId: user.id
+    },2, 
+    function(err, post) {
+      if (err) {
+        console.log(err);
+      }
+      else {
+        console.log(post);
+      }
+    });
     
-//   }
-// });
+  }
+});
+}
+// createUser();
 
 function createPost (){
   redditAPI.createPost({
-    title:'HiHi',
-    url:'www.reddit.com',
-    userId: 8
+    title:'Mercury',
+    url:'www.mercury.com',
+    userId: 22
   },2,
   function(err, post){
     if(err){
@@ -143,4 +148,18 @@ function createPost (){
   })
 };
 
-// createPost();
+//createPost();
+
+
+function getFiveLatestPosts(userId, callback){
+  redditAPI.getFiveLatestPosts(userId, function(err, res){
+    if (err){
+      console.log(err);
+    }
+    else {
+      console.log(res);
+    }
+  });
+}
+
+getFiveLatestPosts(22);

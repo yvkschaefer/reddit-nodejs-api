@@ -62,7 +62,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
       conn.query(
         'INSERT INTO posts (userId, title, url, createdAt, updatedAt, subredditId) VALUES (?, ?, ?, ?, ?, ?)', [post.userId, post.title, post.url, new Date(), new Date(), subredditId],
         function(err, result) {
-          console.log("HELLO", subredditId);
+          //console.log("HELLO", subredditId);
           if (err) {
             callback(err);
           }
@@ -96,16 +96,16 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         callback = options;
         options = {};
       }
-      
+
 
       var sortMethod;
-      if (sortingMethod === 'top'){
+      if (sortingMethod === 'top') {
         sortMethod = 'voteScore'
       }
-      if (sortingMethod === 'hot'){
-        sortMethod = 'voteScore'/'p.createdAt'
+      if (sortingMethod === 'hot') {
+        sortMethod = 'voteScore' / 'p.createdAt'
       }
-      
+
       var limit = options.numPerPage || 25; // if options.numPerPage is "falsy" then use 25
       var offset = (options.page || 0) * limit;
 
@@ -122,7 +122,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         JOIN votes as v ON p.id=v.postId
         GROUP BY postId
         ORDER BY ?? DESC
-        LIMIT ? OFFSET ?`, [sortMethod,limit, offset],
+        LIMIT ? OFFSET ?`, [sortMethod, limit, offset],
         function(err, results) {
           if (err) {
             callback(err);
@@ -171,6 +171,24 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         LIMIT ? OFFSET ?`, [userId, limit, offset], //this line comes back to ? explanation from Ziad's notes.
         function(err, results) {
           if (err) {
+            callback(err);
+          }
+          else {
+            callback(null, results);
+          }
+        }
+      );
+    },
+    getFiveLatestPosts: function(userId, callback) {
+      conn.query(`
+        SELECT *
+        FROM posts
+        WHERE userId = ?
+        ORDER BY createdAt DESC
+        LIMIT 5;
+      `,[userId],
+        function(err, results) {
+          if (err){
             callback(err);
           }
           else {

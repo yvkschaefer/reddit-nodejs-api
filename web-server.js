@@ -3,7 +3,19 @@ var mysql = require('mysql');
 
 var app = express();
 
+var connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'yvkschaefer',
+    password: '',
+    database: 'reddit'
+});
 
+var reddit = require('./reddit');
+var redditAPI = reddit(connection);
+
+
+
+//https://july-20-reddit-nodejs-yvkschaefer.c9users.io
 
 //Exercise 1: Getting started!
 
@@ -20,16 +32,16 @@ var app = express();
 //Create a web server that can listen to requests for /hello?name=firstName, and respond with 
 //some HTML that says <h1>Hello _name_!</h1>. For example, if a client requests /hello/John, the 
 //server should respond with <h1>Hello John!</h1>.
-function getName() {
-    app.get('/hello', function(request, response) {
-        console.log(request.query);
 
-        var firstName = request.query.name;
-        response.send('<h1>Hello ' + firstName + '!</h1>');
+// app.get('/hello', function(request, response) {
+//     console.log(request.query);
 
-    });
-}
-// getName();
+//     var firstName = request.query.name;
+//     response.send('<h1>Hello ' + firstName + '!</h1>');
+
+// });
+
+
 
 
 //Exercise 3: Operations
@@ -37,61 +49,98 @@ function getName() {
 //Create a web server that can listen to requests for /calculator/:operation?num1=XX&num2=XX and 
 //respond with a JSON object that looks like the following. For example, /op/add?num1=31&num2=11:
 
+// app.get('/calculator/:operation', function(request, response) {
+//     console.log('I received a request!');
+//     var num1 = request.query.num1;
+//     var num2 = request.query.num2;
+//     var operation = request.params.operation;
+//     var operationObj = {};
 
-    app.get('/calculator/:operation', function(request, response) {
-        console.log('I received a request!');
-        var num1 = request.query.num1;
-        var num2 = request.query.num2;
-        var operation = request.params.operation;
-        var operationObj = {};
-        
-    
-        
-        if (operation === 'add'){
-        operationObj.operator = 'add';
-        operationObj.firstOperand = num1;
-        operationObj.secondOperand = num2;
-        operationObj.solution = JSON.parse(num1) + JSON.parse(num2)
-        }
 
-        else if (operation === 'sub'){
-        operationObj.operator = 'sub';
-        operationObj.firstOperand = num1;
-        operationObj.secondOperand = num2,
-        operationObj.solution = JSON.parse(num1) - JSON.parse(num2)
-        }
 
-        else if (operation === 'mult'){
-        operationObj.operator = 'mult';
-        operationObj.firstOperand = num1;
-        operationObj.secondOperand = num2;
-        operationObj.solution = JSON.parse(num1) * JSON.parse(num2)
-        }
+//     if (operation === 'add'){
+//     operationObj.operator = 'add';
+//     operationObj.firstOperand = num1;
+//     operationObj.secondOperand = num2;
+//     operationObj.solution = JSON.parse(num1) + JSON.parse(num2)
+//     }
 
-        else if (operation === 'div'){
-        operationObj.operator = 'div';
-        operationObj.firstOperand = num1;
-        operationObj.secondOperand = num2;
-        operationObj.solution = JSON.parse(num1) / JSON.parse(num2)
+//     else if (operation === 'sub'){
+//     operationObj.operator = 'sub';
+//     operationObj.firstOperand = num1;
+//     operationObj.secondOperand = num2,
+//     operationObj.solution = JSON.parse(num1) - JSON.parse(num2)
+//     }
+
+//     else if (operation === 'mult'){
+//     operationObj.operator = 'mult';
+//     operationObj.firstOperand = num1;
+//     operationObj.secondOperand = num2;
+//     operationObj.solution = JSON.parse(num1) * JSON.parse(num2)
+//     }
+
+//     else if (operation === 'div'){
+//     operationObj.operator = 'div';
+//     operationObj.firstOperand = num1;
+//     operationObj.secondOperand = num2;
+//     operationObj.solution = JSON.parse(num1) / JSON.parse(num2)
+//     }
+
+//     else{
+//         response.status(500).send('<h2>Broken!! :(</h2>');
+//     }
+
+//     response.send(operationObj);
+// });
+
+
+app.get('/posts', function(request, response) {
+    console.log('Hey, got your request!');
+    // var authUsername = 
+    redditAPI.getFiveLatestPosts(22, function(err, res) {
+        if (err) {
+            console.log(err);
         }
-        
-        else{
-            response.status(500).send('<h2>Broken!! :(</h2>');
+        else {
+            console.log(res);
+            
+            function createLi(post){
+                return `
+                <li>
+                    <h3><p>
+                        Post Title: ${post.title}
+                    </p>
+                    <a href= ${post.url}>${post.url}</a>
+                    <p>Created By userId: ${post.userId}</p>
+                    </h3>
+                </li>
+                `;
+            }
+            
+            var html = `
+    <div id="contents">
+        <h1>List of contents</h1>
+      <ul class="contents-list">
+       ${res.map(function(post){
+           return createLi(post);
+       }).join("")}
+      </ul>
+    </div>
+    `;
+            
+            response.send(html);
         }
-        
-        response.send(operationObj);
     });
 
-
-
+});
 
 
 /* YOU DON'T HAVE TO CHANGE ANYTHING BELOW THIS LINE :) */
 
 // Boilerplate code to start up the web server
-var server = app.listen(process.env.PORT, process.env.IP, function () {
-  var host = server.address().address;
-  var port = server.address().port;
+var server = app.listen(process.env.PORT, process.env.IP, function() {
+    var host = server.address().address;
+    var port = server.address().port;
 
-  console.log('Example app listening at http://%s:%s', host, port);
+    console.log('Example app listening at http://%s:%s', host, port);
 });
