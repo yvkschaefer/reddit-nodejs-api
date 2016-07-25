@@ -94,45 +94,63 @@ var redditAPI = reddit(connection);
 // });
 
 
-app.get('/posts', function(request, response) {
-    console.log('Hey, got your request!');
-    // var authUsername = 
-    redditAPI.getFiveLatestPosts(22, function(err, res) {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            console.log(res);
+// app.get('/posts', function(request, response) {
+//     console.log('Hey, got your request!');
+//     // var authUsername = 
+//     redditAPI.getFiveLatestPosts(22, function(err, res) {
+//         if (err) {
+//             console.log(err);
+//         }
+//         else {
+//             console.log(res);
             
-            function createLi(post){
-                return `
-                <li class = "content-item">
-                    <h3 class="content-item__title"><p>
-                        Post Title: ${post.title}
-                    </p>
-                    <a href= ${post.url}>${post.url}</a>
-                    <p>Created By userId: ${post.userId}</p>
-                    </h3>
-                </li>
-                `;
-            }
+//             function createLi(post){
+//                 return `
+//                 <li class = "content-item">
+//                     <h3 class="content-item__title"><p>
+//                         Post Title: ${post.title}
+//                     </p>
+//                     <a href= ${post.url}>${post.url}</a>
+//                     <p>Created By userId: ${post.userId}</p>
+//                     </h3>
+//                 </li>
+//                 `;
+//             }
             
-            var html = `
-    <div id="contents">
-        <h1>List of contents</h1>
-      <ul class="contents-list">
-       ${res.map(function(post){
-           return createLi(post);
-       }).join("")}
-      </ul>
-    </div>
-    `;
+//             var html = `
+//     <div id="contents">
+//         <h1>List of contents</h1>
+//       <ul class="contents-list">
+//       ${res.map(function(post){
+//           return createLi(post);
+//       }).join("")}
+//       </ul>
+//     </div>
+//     `;
             
-            response.send(html);
-        }
-    });
+//             response.send(html);
+//         }
+//     });
 
+// });
+
+
+var form = 
+`
+<form action="/createContent" method="POST">
+  <div>
+    <input type="text" name="url" placeholder="Enter a URL to content">
+  </div>
+  <div>
+    <input type="text" name="title" placeholder="Enter the title of your content">
+  </div>
+  <button type="submit">Create!</button>
+</form>
+`;
+app.get('/createContent', function(request, response){
+    response.send(form);
 });
+
 
 
 /* YOU DON'T HAVE TO CHANGE ANYTHING BELOW THIS LINE :) */
