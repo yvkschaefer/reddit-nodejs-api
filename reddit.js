@@ -60,7 +60,9 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
     },
     createPost: function(post, subredditId, callback) {
       conn.query(
-        'INSERT INTO posts (userId, title, url, createdAt, updatedAt, subredditId) VALUES (?, ?, ?, ?, ?, ?)', [post.userId, post.title, post.url, new Date(), new Date(), subredditId],
+        `INSERT INTO posts (userId, title, url, createdAt, updatedAt, subredditId) 
+        VALUES (?, ?, ?, ?, ?, ?)
+        `, [post.userId, post.title, post.url, new Date(), new Date(), subredditId],
         function(err, result) {
           //console.log("HELLO", subredditId);
           if (err) {
@@ -72,7 +74,10 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
             the post and send it to the caller!
             */
             conn.query(
-              'SELECT id,title,url,userId, createdAt, updatedAt, subredditId FROM posts WHERE id = ?', [result.insertId],
+              `SELECT id,title,url,userId, createdAt, updatedAt, subredditId 
+              FROM posts 
+              WHERE id = ?
+              `, [result.insertId],
               function(err, result) {
                 //console.log("HELLO", result);
 
@@ -88,7 +93,34 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       );
     },
-
+    createPostFromForm: function(form, callback) {
+      conn.query(`
+      INSERT INTO posts(userId, title, url, createdAt, updatedAt, subredditId)
+      VALUES(?, ?, ?, ?, ?, ?)
+      `, [22, form.title, form.url, new Date(), new Date(), 2],
+        function(err, result) {
+          if (err) {
+            callback(err);
+          }
+          else {
+            conn.query(`
+          SELECT id,title,url,userId, createdAt, updatedAt, subredditId 
+              FROM posts 
+              WHERE id = ?
+              `, [result.insertId],
+              function(err, result) {
+                if (err) {
+                  callback(err);
+                }
+                else {
+                  callback(null, result[0]);
+                }
+              }
+            );
+          }
+        }
+      );
+    },
 
     getAllPosts: function(sortingMethod, options, callback) {
       // In case we are called without an options parameter, shift all the parameters manually
@@ -186,9 +218,9 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         WHERE userId = ?
         ORDER BY createdAt DESC
         LIMIT 5;
-      `,[userId],
+      `, [userId],
         function(err, results) {
-          if (err){
+          if (err) {
             callback(err);
           }
           else {

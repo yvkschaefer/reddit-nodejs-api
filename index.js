@@ -1,6 +1,4 @@
 require('longjohn');
-
-// load the mysql library
 var mysql = require('mysql');
 
 // create a connection to our Cloud9 server

@@ -2,6 +2,7 @@ var express = require('express');
 var mysql = require('mysql');
 
 var app = express();
+var bodyParser = require('body-parser');
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -13,7 +14,11 @@ var connection = mysql.createConnection({
 var reddit = require('./reddit');
 var redditAPI = reddit(connection);
 
-
+// parse application/x-www-form-urlencoded
+//https://github.com/expressjs/body-parser#bodyparserurlencodedoptions
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 
 //https://july-20-reddit-nodejs-yvkschaefer.c9users.io
 
@@ -96,14 +101,13 @@ var redditAPI = reddit(connection);
 
 // app.get('/posts', function(request, response) {
 //     console.log('Hey, got your request!');
-//     // var authUsername = 
 //     redditAPI.getFiveLatestPosts(22, function(err, res) {
 //         if (err) {
 //             console.log(err);
 //         }
 //         else {
 //             console.log(res);
-            
+
 //             function createLi(post){
 //                 return `
 //                 <li class = "content-item">
@@ -116,7 +120,7 @@ var redditAPI = reddit(connection);
 //                 </li>
 //                 `;
 //             }
-            
+
 //             var html = `
 //     <div id="contents">
 //         <h1>List of contents</h1>
@@ -127,7 +131,7 @@ var redditAPI = reddit(connection);
 //       </ul>
 //     </div>
 //     `;
-            
+
 //             response.send(html);
 //         }
 //     });
@@ -135,8 +139,8 @@ var redditAPI = reddit(connection);
 // });
 
 
-var form = 
-`
+var form =
+    `
 <form action="/createContent" method="POST">
   <div>
     <input type="text" name="url" placeholder="Enter a URL to content">
@@ -147,15 +151,30 @@ var form =
   <button type="submit">Create!</button>
 </form>
 `;
-app.get('/createContent', function(request, response){
+app.get('/createContent', function(request, response) {
     response.send(form);
 });
 
+app.post('/createContent', function(request, response) {
+    console.log(request.body);
+    redditAPI.createPostFromForm(request.body, function(err, result) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log(result);
+            response.send(result);
+        }
+     
+    });
+
+});
+
+//Once you are familiar with the contents of req.body, use a version of your createPost MySQL 
+//function to create a new post that has the URL and Title passed to you in the HTTP request. 
+//For the moment, set the user as being ID#1, or "John Smith".
 
 
-/* YOU DON'T HAVE TO CHANGE ANYTHING BELOW THIS LINE :) */
-
-// Boilerplate code to start up the web server
 var server = app.listen(process.env.PORT, process.env.IP, function() {
     var host = server.address().address;
     var port = server.address().port;
