@@ -14,6 +14,7 @@
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "longjohn": "^0.2.11",
-    "mysql": "^2.10.2"
+    "mysql": "^2.10.2",
+    "secure-random": "^1.1.1"
   }
 }

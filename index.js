@@ -1,3 +1,7 @@
+var express = require('express');
+var bodyParser = require('body-parser');
+
+
 require('longjohn');
 var mysql = require('mysql');
 
@@ -13,151 +17,79 @@ var connection = mysql.createConnection({
 var reddit = require('./reddit'); //'./reddit' is the same as './reddit.js'
 var redditAPI = reddit(connection);
 
-var vote = {
-  postId : 12,
-  userId : 8,
-  vote : 1
-};
+var app = express();
 
-function createOrUpdateVote(vote){
-  redditAPI.createOrUpdateVote (vote, function (err, res){
-    if (err) {
-      console.log(err);
-    }
-    else {
-      console.log(res);
-    }
-  });  
-}
+app.disable('x-powered-by');
 
-// createOrUpdateVote(vote);
+app.use(bodyParser.urlencoded({ //says every request that comes in through my express server, before going to the fn, it's going to go through another fn that's going to pre-process my request. helps me get more interesting request obj. this one parses the body.
+    extended: false
+}));
 
 
+//okay let's do some signing up. give the user a form, sign em up
 
-function getAllSubreddits() {
+app.get('/signup', function (request, response){
+  var signupForm = `
+  <form action='/signup' method='POST'>
+    <div>
+      <input type='text' name='username' placeholder='choose your own unique username!'>
+    </div>
+    <div>
+      <input type='text' name='password' placeholder='choose a password that isn't easy to guess!'>
+    </div>
+    <button type='submit'>Sign Up!</button>
+  `;
+  response.send(signupForm);
+});
 
-  redditAPI.getAllSubreddits (function (err, res){
-    if (err) {
-      console.log(err);
-    }
-    else {
-      console.log(res);
-    }
-  });
+
+app.post('/signup', function(request, response){
+  //write a function in reddit.js, maybe called newUser or sthg
   
-}
+  redditAPI.createUser
+})
 
-//getAllSubreddits();
-
-
-
-// var objTest = {
-//   name: 'Lothar',
-//   description: 'retired'
-// }
-
-// redditAPI.createSubreddit(objTest, function(err, res){
-//   if (err){
-//     console.log(err);
-//   }
-//   else {
-//     console.log(res);
-//   }
-// })
-
-// redditAPI.getSinglePost( function(err, res){ //make sure you put a postId parameter in before function when you call
-//   if (err){
-//     console.log(err);
-//   }
-//   else {
-//     console.log(res);
-//   }
-// })
+//let's go to the login page, give the user a form, and check to see if their login works
 
 
-// redditAPI.getAllPostsForUser(function (err, res){
-//   if (err){
-//     console.log(err);
-//   }
-//   else {
-//     console.log(res);
-//   }
-// })
-
-function getAllPosts(sort){
-redditAPI.getAllPosts(sort, function (err, res){
-  if (err){
-    console.log(err);
-  }
-  else {
-    console.log(res);
-  }
+app.get('/login', function(request, response){
+var loginForm = `
+<form action='/login' method='POST'>
+  <div>
+    <input type='text' name='username' placeholder='Enter your username here'>
+  </div>
+  <div>
+    <input type='text' name='password' placeholder='Enter your password here'>
+  </div>
+  <button type='submit'>Login!</button>
+</form>
+`;
+  console.log(request.body);
+  response.send(loginForm);
 });
-}
 
-//getAllPosts('top');
-
-
-// It's request time!
-
-function createUser(){
-
-redditAPI.createUser({
-  username: 'John Smith',
-  password: 'xx'
-}, function(err, user) {
-  // console.log(user);
-  if (err) {
-    console.log(err);
-  }
-  else {
-    redditAPI.createPost({
-      title: 'hi reddits!',
-      url: 'https://www.reddits.com',
-      userId: user.id
-    },2, 
-    function(err, post) {
-      if (err) {
-        console.log(err);
-      }
-      else {
-        console.log(post);
-      }
-    });
-    
-  }
-});
-}
-// createUser();
-
-function createPost (){
-  redditAPI.createPost({
-    title:'Mercury',
-    url:'www.mercury.com',
-    userId: 22
-  },2,
-  function(err, post){
-    if(err){
-      console.log(err);
-    }
-    else {
-      console.log(post);
-    }
-  })
-};
-
-//createPost();
-
-
-function getFiveLatestPosts(userId, callback){
-  redditAPI.getFiveLatestPosts(userId, function(err, res){
+app.post('/login', function (request, response){
+  console.log(request.body);
+  redditAPI.checkLogin(request.body, function (err, result){
     if (err){
-      console.log(err);
+      console.log(err.stack);
     }
     else {
-      console.log(res);
+      response.send(response.body);
     }
   });
-}
+});
 
-getFiveLatestPosts(22);
+
+
+
+
+
+var server = app.listen(process.env.PORT, process.env.IP, function() {
+    var host = server.address().address;
+    var port = server.address().port;
+
+    console.log('Example app listening at http://%s:%s', host, port);
+});
+
+

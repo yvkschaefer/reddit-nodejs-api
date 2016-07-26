@@ -1,5 +1,7 @@
 var bcrypt = require('bcrypt');
 var HASH_ROUNDS = 10;
+var secureRandom = require('secure-random');
+
 
 module.exports = function RedditAPI(conn) { //the conn that you pass here must be a valid mysql connection
   return {
@@ -12,7 +14,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
         else {
           conn.query(
-            'INSERT INTO users (username,password, createdAt, updatedAt) VALUES (?, ?, ?, ?)', [user.username, hashedPassword, new Date(), new Date()],
+            'INSERT INTO users (username, password, createdAt, updatedAt) VALUES (?, ?, ?, ?)', [user.username, hashedPassword, new Date(), new Date()],
             function(err, result) {
               if (err) {
                 /*
@@ -310,14 +312,70 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
                 else {
                   callback(null, result);
                 }
-              })
+              });
             }
           }
-        )
+        );
       }
       else {
         callback(null, 'oops, the vote should be either -1 to downvote, 1 to upvote, or 0 to cancel a vote');
       }
+    },
+    newUser: function(username, password, callback) {
+      //does this user already exist?
+      conn.query(`
+      SELECT * FROM users
+      WHERE username = ?
+      `, [username], function(err, result) {
+        if (err) {
+          console.log(err.stack);
+          callback(err);
+        }
+        else if (result.length === 0) { //username is not taken, so, let's add them to our system!
+          //hash password first
+          bcrypt.hash(password, HASH_ROUNDS, function(err, hashedPassword) {
+            if (err) {
+              callback(err);
+            }
+            else {
+
+            }
+          });
+          conn.query(`
+      UPDATE users
+      `);
+        }
+      });
+
+    },
+    checkLogin: function(username, password, callback) {
+      conn.query(`
+      SELECT * FROM users WHERE username = ?
+      `, [username], function(err, result) {
+        if (err) {
+          console.log(err.stack);
+          callback(err);
+        }
+        else if (result.length === 0) { //if this, means that username is not in the system
+          callback(new Error('username or password incorrect'));
+        }
+        else {
+          var user = result[0];
+          var actualHashedPassword = result.password;
+          bcrypt.compare(password, actualHashedPassword, function(err, result) {
+            if (err) {
+              console.log(err.stack);
+              callback(err);
+            }
+            else if (result === true) {
+              callback(null, username);
+            }
+            else {
+              callback(new Error('username or password incorrect'));
+            }
+          })
+        }
+      });
     }
   };
 };
