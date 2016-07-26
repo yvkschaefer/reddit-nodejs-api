@@ -1,8 +1,7 @@
 var express = require('express');
-var mysql = require('mysql');
-
-var app = express();
 var bodyParser = require('body-parser');
+
+var mysql = require('mysql');
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -14,9 +13,14 @@ var connection = mysql.createConnection({
 var reddit = require('./reddit');
 var redditAPI = reddit(connection);
 
+var app = express();
+
+
+app.disable('x-powered-by');
+
 // parse application/x-www-form-urlencoded
 //https://github.com/expressjs/body-parser#bodyparserurlencodedoptions
-app.use(bodyParser.urlencoded({
+app.use(bodyParser.urlencoded({ //says every request that comes in through my express server, before going to the fn, it's going to go through another fn that's going to pre-process my request. helps me get more interesting request obj. this one parses the body.
     extended: false
 }));
 
@@ -37,13 +41,16 @@ app.use(bodyParser.urlencoded({
 //Create a web server that can listen to requests for /hello?name=firstName, and respond with 
 //some HTML that says <h1>Hello _name_!</h1>. For example, if a client requests /hello/John, the 
 //server should respond with <h1>Hello John!</h1>.
-
 // app.get('/hello', function(request, response) {
 //     console.log(request.query);
 
 //     var firstName = request.query.name;
-//     response.send('<h1>Hello ' + firstName + '!</h1>');
-
+//     if (!firstName) {
+//         response.send('<h1>Hello World!</h1>');
+//     }
+//     else {
+//         response.send('<h1>Hello ' + firstName + '!</h1>');
+//     }
 // });
 
 
@@ -56,9 +63,10 @@ app.use(bodyParser.urlencoded({
 
 // app.get('/calculator/:operation', function(request, response) {
 //     console.log('I received a request!');
-//     var num1 = request.query.num1;
-//     var num2 = request.query.num2;
 //     var operation = request.params.operation;
+//     var num1 = parseFloat(request.query.num1);
+//     var num2 = parseFloat(request.query.num2);
+
 //     var operationObj = {};
 
 
@@ -67,32 +75,32 @@ app.use(bodyParser.urlencoded({
 //     operationObj.operator = 'add';
 //     operationObj.firstOperand = num1;
 //     operationObj.secondOperand = num2;
-//     operationObj.solution = JSON.parse(num1) + JSON.parse(num2)
+//     operationObj.solution = num1 + num2
 //     }
 
 //     else if (operation === 'sub'){
 //     operationObj.operator = 'sub';
 //     operationObj.firstOperand = num1;
 //     operationObj.secondOperand = num2,
-//     operationObj.solution = JSON.parse(num1) - JSON.parse(num2)
+//     operationObj.solution = num1 - num2
 //     }
 
 //     else if (operation === 'mult'){
 //     operationObj.operator = 'mult';
 //     operationObj.firstOperand = num1;
 //     operationObj.secondOperand = num2;
-//     operationObj.solution = JSON.parse(num1) * JSON.parse(num2)
+//     operationObj.solution = num1 * num2
 //     }
 
 //     else if (operation === 'div'){
 //     operationObj.operator = 'div';
 //     operationObj.firstOperand = num1;
 //     operationObj.secondOperand = num2;
-//     operationObj.solution = JSON.parse(num1) / JSON.parse(num2)
+//     operationObj.solution = num1 / num2
 //     }
 
 //     else{
-//         response.status(500).send('<h2>Broken!! :(</h2>');
+//         response.status(400).send('<h2>Broken!! :( Please pass a correct operator</h2>');
 //     }
 
 //     response.send(operationObj);
@@ -103,12 +111,13 @@ app.use(bodyParser.urlencoded({
 //     console.log('Hey, got your request!');
 //     redditAPI.getFiveLatestPosts(22, function(err, res) {
 //         if (err) {
-//             console.log(err);
+//             response.status(500).send('try again later');
+//             console.log(err.stack);
 //         }
 //         else {
 //             console.log(res);
 
-//             function createLi(post){
+//             function createLi(post) {
 //                 return `
 //                 <li class = "content-item">
 //                     <h3 class="content-item__title"><p>
@@ -127,7 +136,7 @@ app.use(bodyParser.urlencoded({
 //       <ul class="contents-list">
 //       ${res.map(function(post){
 //           return createLi(post);
-//       }).join("")}
+//       }).join('')}
 //       </ul>
 //     </div>
 //     `;
@@ -165,7 +174,7 @@ app.post('/createContent', function(request, response) {
             console.log(result);
             response.send(result);
         }
-     
+
     });
 
 });
