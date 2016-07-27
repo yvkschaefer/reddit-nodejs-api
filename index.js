@@ -41,7 +41,10 @@ app.get('/signup', function(request, response) {
     </div>
     <button type='submit'>Sign Up!</button>
     <div>
-    already signed up? login <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/login">here</a>
+      already signed up? login <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/login">here</a>
+    </div>
+    <div>
+      <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>
     </div>
   `;
   response.send(signupForm);
@@ -78,6 +81,12 @@ app.get('/login', function(request, response) {
     <input type='text' name='password' placeholder='Enter your password here'>
   </div>
   <button type='submit'>Login!</button>
+  <div>
+    don't have an account? sign-up <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/signup">here</a>
+  </div>
+  <div>
+    <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>
+  </div>
 </form>
 `;
   console.log(request.body);
@@ -142,7 +151,7 @@ app.get('/', function(request, response) {
 	  <thead>
   	</thead>
 	  <tbody>
-	    <td>Create Post</td>
+	    <td><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/createPost">Create Post</a></td>
 </body>
 </html>`;
   response.send(homepage);
@@ -216,6 +225,25 @@ app.get('/controversial', function(request, response) {
     </html>
     `;
   response.send(controversial);
+});
+
+
+
+app.get('/createPost', function(request, response) {
+  var createPost = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>submit a post</title>
+      </head>
+      <body>
+        <div>
+          <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>
+        </div>
+      </body>
+    </html>
+    `;
+  response.send(createPost);
 });
 
 var server = app.listen(process.env.PORT, process.env.IP, function() {
