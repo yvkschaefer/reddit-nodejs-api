@@ -1,10 +1,35 @@
 var bcrypt = require('bcrypt');
 var HASH_ROUNDS = 10;
+const saltRounds = 10;
 var secureRandom = require('secure-random');
+var cookieParser = require('cookie-parser');
+
+
+
 
 
 module.exports = function RedditAPI(conn) { //the conn that you pass here must be a valid mysql connection
   return {
+    createSessionToken: function(){
+      console.log('HELLO');
+      return secureRandom.randomArray(100).map(code => code.toString(36)).join('');
+    },
+    createSession: function(userId, callback){
+      var token = this.createSessionToken();
+      console.log('Hello');
+      
+      conn.query(`
+      INSERT INTO sessions SET userId = ?, token = ?
+      `, [userId, token], function (err, result){
+        if (err){
+          callback(err);
+        }
+        else {
+          //console.log(token);
+          callback(null, token); //this is the secret session token
+        }
+      });
+    },
     createUser: function(user, callback) {
 
       // first we have to hash the password...
@@ -323,30 +348,42 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
     },
     newUser: function(username, password, callback) {
       //does this user already exist?
+      console.log('this is the password', password);
       conn.query(`
       SELECT * FROM users
       WHERE username = ?
       `, [username], function(err, result) {
         if (err) {
-          console.log(err.stack);
-          callback(err);
+          if (err.code === 'ER_DUP_ENTRY') {
+            callback(new Error('username or password incorrect'));
+          }
+          else {
+            callback(err);
+          }
         }
-        else if (result.length === 0) { //username is not taken, so, let's add them to our system!
+        else { //username is not taken, so, let's add them to our system!
           //hash password first
-          bcrypt.hash(password, HASH_ROUNDS, function(err, hashedPassword) {
+          bcrypt.hash(password, saltRounds, function(err, hashedPassword) {
             if (err) {
               callback(err);
             }
             else {
-
+              conn.query(`
+              INSERT INTO users (username, password, createdAt, updatedAt)
+              VALUES (?, ?, ?, ?)
+              `, [username, hashedPassword, new Date(), new Date()],
+                function(err, result) {
+                  if (err) {
+                    callback(err);
+                  }
+                  else {
+                    callback(null, result[0]);
+                  }
+                });
             }
           });
-          conn.query(`
-      UPDATE users
-      `);
         }
       });
-
     },
     checkLogin: function(username, password, callback) {
       conn.query(`
@@ -361,7 +398,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
         else {
           var user = result[0];
-          var actualHashedPassword = result.password;
+          var actualHashedPassword = user.password; //do I need to have a bcrypt.hash //this is where Ziad put a not-so-nifty error
           bcrypt.compare(password, actualHashedPassword, function(err, result) {
             if (err) {
               console.log(err.stack);
