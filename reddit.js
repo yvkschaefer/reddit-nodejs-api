@@ -11,16 +11,16 @@ var cookieParser = require('cookie-parser');
 module.exports = function RedditAPI(conn) { //the conn that you pass here must be a valid mysql connection
   return {
     createSessionToken: function(){
-      console.log('HELLO');
+      //console.log('HELLO');
       return secureRandom.randomArray(100).map(code => code.toString(36)).join('');
     },
     createSession: function(userId, callback){
       var token = this.createSessionToken();
-      console.log('Hello');
+      //console.log('Hello');
       
       conn.query(`
-      INSERT INTO sessions SET userId = ?, token = ?
-      `, [userId, token], function (err, result){
+      INSERT INTO sessions SET userId = ?, token = ?, createdAt = ?
+      `, [userId, token, new Date()], function (err, result){
         if (err){
           callback(err);
         }
@@ -348,7 +348,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
     },
     newUser: function(username, password, callback) {
       //does this user already exist?
-      console.log('this is the password', password);
+      //console.log('this is the password', password);
       conn.query(`
       SELECT * FROM users
       WHERE username = ?
@@ -394,7 +394,11 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
           callback(err);
         }
         else if (result.length === 0) { //if this, means that username is not in the system
-          callback(new Error('username or password incorrect'));
+          callback(new Error(`
+          username or password incorrect. 
+          please <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/login">try again</a> 
+          or sign up <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/signup">here</a>
+          `));
         }
         else {
           var user = result[0];
@@ -410,7 +414,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
             else {
               callback(new Error('username or password incorrect'));
             }
-          })
+          });
         }
       });
     }
