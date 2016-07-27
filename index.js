@@ -111,8 +111,10 @@ app.post('/login', function(request, response) {
           response.status(500).send('an error occured. please try again later!');
         }
         else {
-          response.cookie('SESSION', token); //the secret token is now in the user's cookies!
+          //console.log(token);
+          response.cookie('SESSION', token); //the secret token is now in the user's cookies! ... the token is the cookie
           response.redirect('/');
+          //console.log('cookie: ' + JSON.stringify(request.cookies));
         }
       });
     }
@@ -141,10 +143,10 @@ app.get('/', function(request, response) {
 		<thead>
 		</thead>
 		<tbody>
-				<td><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/top">Top</a></td>
-				<td><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/hot">Hot</a></td>
-				<td><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/newest">New</a></td>
-				<td><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/controversial">Controversial</a></td>
+				<td>Top</td>
+				<td>Hot</td>
+				<td>New</td>
+				<td>Controversial</td>
 		</tbody>
 	  </table>
 	  <table>
@@ -157,94 +159,61 @@ app.get('/', function(request, response) {
   response.send(homepage);
 });
 
-
-//'hot' page. this actually will be the same as the homepage.
-app.get('/hot', function(request, response) {
-  var hot = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>reddit: the front page of week four</title>
-      </head>
-      <body>
-        <div>
-          <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>
-        </div>
-      </body>
-    </html>
-    `;
-  response.send(hot);
-});
-
-app.get('/top', function(request, response) {
-  var top = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>top scoring links</title>
-      </head>
-      <body>
-        <div>
-          <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>
-        </div>
-      </body>
-    </html>
-    `;
-  response.send(top);
-});
-
-app.get('/newest', function(request, response) {
-  var newest = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>newest submissions</title>
-      </head>
-      <body>
-        <div>
-          <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>
-        </div>
-      </body>
-    </html>
-    `;
-  response.send(newest);
-});
-
-app.get('/controversial', function(request, response) {
-  var controversial = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>most controversial links</title>
-      </head>
-      <body>
-        <div>
-          <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>
-        </div>
-      </body>
-    </html>
-    `;
-  response.send(controversial);
-});
-
-
-
 app.get('/createPost', function(request, response) {
   var createPost = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>submit a post</title>
-      </head>
-      <body>
-        <div>
-          <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>
-        </div>
-      </body>
-    </html>
-    `;
+     <!DOCTYPE html>
+     <html>
+       <head>
+         <title>create a post</title>
+       </head>
+       <body>
+        <form action="/createPost" method="POST">
+          <div>
+            <input type="text" name="url" placeholder="Enter a URL for your post">
+          </div>
+          <div>
+            <input type="text" name="title" placeholder="Enter the title of your post">
+          </div>
+          <div>
+            <input type="text" name="subredditId" placeholder="subreddit ID of your post">
+          </div>
+            <button type="submit">Create!</button>
+        </form>
+         <div>
+           <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>
+         </div>
+       </body>
+     </html>
+     `;
   response.send(createPost);
 });
+
+app.post('/createPost', function(request, response) {
+    //console.log(request.cookies.SESSION);
+    redditAPI.getUserSession(request.cookies.SESSION, function(err, session){
+      if(err){
+        response.send(err.toString());
+      }
+      else{
+        console.log('url: ' + request.body.url + ' title: ' + request.body.title + ' subredditId: ' + request.body.subredditId);
+        //response.send('/');
+        redditAPI.createPost(request.body, function (err, result){
+          if(err){
+            console.log(err.stack);
+            response.status(500).send('an error occured. please try again later!');
+          }
+          else{
+            console.log('the end?');
+            response.send('/');
+          }
+        });
+      }
+    });
+});
+
+
+
+
 
 var server = app.listen(process.env.PORT, process.env.IP, function() {
   var host = server.address().address;

@@ -2,6 +2,7 @@ var bcrypt = require('bcrypt');
 var HASH_ROUNDS = 10;
 const saltRounds = 10;
 var secureRandom = require('secure-random');
+var cookie = require('cookie');
 var cookieParser = require('cookie-parser');
 
 
@@ -85,11 +86,11 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       });
     },
-    createPost: function(post, subredditId, callback) {
+    createPost: function(post, callback) {
       conn.query(
         `INSERT INTO posts (userId, title, url, createdAt, updatedAt, subredditId) 
         VALUES (?, ?, ?, ?, ?, ?)
-        `, [post.userId, post.title, post.url, new Date(), new Date(), subredditId],
+        `, [post.userId, post.title, post.url, new Date(), new Date(), post.subredditId],
         function(err, result) {
           //console.log("HELLO", subredditId);
           if (err) {
@@ -273,9 +274,9 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
     },
     createSubreddit: function(subreddit, callback) {
       conn.query(`
-      INSERT INTO subreddits (name, description, createdAt) 
-      VALUES (?, ?, ?)
-      `, [subreddit.name, subreddit.description, new Date()],
+      INSERT INTO subreddits (name, description, createdAt, updatedAt) 
+      VALUES (?, ?, ?, ?)
+      `, [subreddit.name, subreddit.description, new Date(), new Date()],
         function(err, result) {
           if (err) {
             callback(err);
@@ -294,7 +295,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
                   callback(null, result[0]);
                 }
               }
-            )
+            );
           }
         }
       );
@@ -415,6 +416,28 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
               callback(new Error('username or password incorrect'));
             }
           });
+        }
+      });
+    },
+    getUserSession: function(token, callback){//when the user logs in, previously... set a cookie with the value userId, then when call isLoggedIn
+      conn.query(`
+      SELECT * FROM sessions
+      WHERE token = ?
+      `, [token], function(err, session){
+        if(err){
+          console.log(err.stack);
+          callback(err);
+        }
+        else if(session.length === 0){
+          callback(new Error(`
+            you must be logged in to do this.
+            please <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/login">login</a> 
+            or sign up <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/signup">here</a>
+            `));
+        }
+        else {
+          //they're logged in. so... proceed.
+          callback(null, session);
         }
       });
     }
