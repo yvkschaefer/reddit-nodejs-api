@@ -86,11 +86,12 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       });
     },
-    createPost: function(post, callback) {
+    createPost: function(post, callback) { //this somehow needs to take user from checkLoginToken and then, (94)
+      console.log(post); //this object does not have a userId. post.userId is undefined.
       conn.query(
         `INSERT INTO posts (userId, title, url, createdAt, updatedAt, subredditId) 
         VALUES (?, ?, ?, ?, ?, ?)
-        `, [post.userId, post.title, post.url, new Date(), new Date(), post.subredditId],
+        `, [post.userId, post.title, post.url, new Date(), new Date(), post.subredditId],//cont 89, instead of post.userId, I need user.userId
         function(err, result) {
           //console.log("HELLO", subredditId);
           if (err) {

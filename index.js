@@ -32,8 +32,9 @@ app.use(bodyParser.urlencoded({ //says every request that comes in through my ex
 app.use(cookieParser()); //this middleware will add a `cookies` property to the request, an object of key:value pairs for all the cookies we set
 
 app.use('/files', express.static(__dirname + '/static'));
+app.use(checkLoginToken);
 
-//okay let's do some signing up. give the user a form, sign em up
+
 
 app.get('/signup', function(request, response) {
   response.render('signup.ejs');
@@ -112,7 +113,7 @@ app.post('/createPost', function(request, response) {
       response.send(err.toString());
     }
     else {
-      console.log('url: ' + request.body.url + ' title: ' + request.body.title);
+      //console.log('url: ' + request.body.url + ' title: ' + request.body.title);
       redditAPI.createPost(request.body, function(err, result) {
         if (err) {
           console.log(err.stack);
@@ -129,14 +130,15 @@ app.post('/createPost', function(request, response) {
 
 function checkLoginToken(request, response, next) {
   // console.log('Request.cookies.SESSION: ' + request.cookies.SESSION);
-
   if (request.cookies.SESSION) {
     redditAPI.getUserFromSession(request.cookies.SESSION, function(err, user) {
+        console.log('got here ', user);
       if (err) {
         response.send(err.toString());
       }
       else if (user) {
         request.loggedInUser = user;
+        next();
       }
       else {
         next();
@@ -148,7 +150,6 @@ function checkLoginToken(request, response, next) {
   }
 }
 
-//app.use(checkLoginToken);
 
 
 var server = app.listen(process.env.PORT, process.env.IP, function() {
