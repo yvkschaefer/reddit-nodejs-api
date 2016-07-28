@@ -66,25 +66,21 @@ app.get('/login', function(request, response) {
 });
 
 app.post('/login', function(request, response) {
-  //console.log(request.body);
   redditAPI.checkLogin(request.body.username, request.body.password, function(err, user) {
-   // console.log(user);
     if (err) {
-      //console.log(request.body.username);
-      //console.log(request.body.password);
       response.status(401).send(err.message);
     }
     else {
       //password is OK!
       //we have to create a token and send it to the user in his cookies, then add it to our sessions table!
 
-      //console.log('Is this working?');
+
       redditAPI.createSession(user.id, function(err, token) { //used to say user.id and it worked
         if (err) {
           response.status(500).send('an error occured. please try again later!');
         }
         else {
-          //console.log(user.id);
+
           response.cookie('SESSION', token); //the secret token is now in the user's cookies! ... the token is the cookie
           response.redirect('/');
           //console.log('cookie: ' + JSON.stringify(request.cookies));
@@ -107,14 +103,11 @@ app.get('/createPost', function(request, response) {
 });
 
 app.post('/createPost', function(request, response) {
-  //console.log(request.cookies.SESSION);
-  redditAPI.getUserSession(request.cookies.SESSION, function(err, session) {
-    if (err) {
-      response.send(err.toString());
-    }
-    else {
-      //console.log('url: ' + request.body.url + ' title: ' + request.body.title);
-      redditAPI.createPost(request.body, function(err, result) {
+  //console.log('show me the request.loggedInUser ', request.loggedInUser);
+  
+  if(request.loggedInUser) {
+    var userId = request.loggedInUser.userId;
+      redditAPI.createPost(request.body, userId, function(err, result) {
         if (err) {
           console.log(err.stack);
           response.status(500).send('an error occured. please try again later!');
@@ -123,8 +116,10 @@ app.post('/createPost', function(request, response) {
           response.redirect('/');
         }
       });
-    }
-  });
+  } else {
+     response.redirect('/login');
+  }
+  
 });
 
 
@@ -132,12 +127,15 @@ function checkLoginToken(request, response, next) {
   // console.log('Request.cookies.SESSION: ' + request.cookies.SESSION);
   if (request.cookies.SESSION) {
     redditAPI.getUserFromSession(request.cookies.SESSION, function(err, user) {
-        console.log('got here ', user);
+        //console.log('got here ', user);
       if (err) {
         response.send(err.toString());
       }
       else if (user) {
-        request.loggedInUser = user;
+        
+       request.loggedInUser = user;
+        
+        
         next();
       }
       else {

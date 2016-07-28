@@ -12,12 +12,11 @@ var cookieParser = require('cookie-parser');
 module.exports = function RedditAPI(conn) { //the conn that you pass here must be a valid mysql connection
   return {
     createSessionToken: function() {
-      //console.log('HELLO');
       return secureRandom.randomArray(100).map(code => code.toString(36)).join('');
     },
+    
     createSession: function(userId, callback) {
       var token = this.createSessionToken();
-      //console.log('Hello');
 
       conn.query(`
       INSERT INTO sessions SET userId = ?, token = ?, createdAt = ?
@@ -26,11 +25,11 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
           callback(err);
         }
         else {
-          //console.log("TOKEN", token);
           callback(null, token); //this is the secret session token
         }
       });
     },
+    
     createUser: function(user, callback) {
 
       // first we have to hash the password...
@@ -86,14 +85,14 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       });
     },
-    createPost: function(post, callback) { //this somehow needs to take user from checkLoginToken and then, (94)
-      console.log(post); //this object does not have a userId. post.userId is undefined.
+    
+    createPost: function(post, userIdfromSession, callback) { //this somehow needs to take user from checkLoginToken and then, (94)
+      //console.log(post);
       conn.query(
         `INSERT INTO posts (userId, title, url, createdAt, updatedAt, subredditId) 
         VALUES (?, ?, ?, ?, ?, ?)
-        `, [post.userId, post.title, post.url, new Date(), new Date(), post.subredditId],//cont 89, instead of post.userId, I need user.userId
+        `, [userIdfromSession, post.title, post.url, new Date(), new Date(), post.subredditId],//cont 89, instead of post.userId, I need user.userId
         function(err, result) {
-          //console.log("HELLO", subredditId);
           if (err) {
             callback(err);
           }
@@ -108,8 +107,6 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
               WHERE id = ?
               `, [result.insertId],
               function(err, result) {
-                //console.log("HELLO", result);
-
                 if (err) {
                   callback(err);
                 }
@@ -122,6 +119,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       );
     },
+    
     createPostFromForm: function(form, callback) {
       conn.query(`
       INSERT INTO posts(userId, title, url, createdAt, updatedAt, subredditId)
@@ -150,7 +148,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       );
     },
-
+    
     getAllPosts: function(sortingMethod, options, callback) {
       // In case we are called without an options parameter, shift all the parameters manually
       if (!callback) {
@@ -217,6 +215,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       );
     },
+    
     getAllPostsForUser: function(userId, options, callback) {
       if (!callback) {
         callback = options;
@@ -240,6 +239,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       );
     },
+    
     getFiveLatestPosts: function(userId, callback) {
       conn.query(`
         SELECT *
@@ -258,6 +258,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       );
     },
+    
     getSinglePost: function(userId, callback) {
       conn.query(`
       SELECT *
@@ -273,6 +274,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       );
     },
+    
     createSubreddit: function(subreddit, callback) {
       conn.query(`
       INSERT INTO subreddits (name, description, createdAt, updatedAt) 
@@ -301,6 +303,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       );
     },
+    
     getAllSubreddits: function(callback) {
       conn.query(`
       SELECT * FROM subreddits
@@ -316,9 +319,9 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       );
     },
+    
     createOrUpdateVote: function(vote, callback) {
       if (vote.vote === -1 || vote.vote === 0 || vote.vote === 1) {
-        //callback(null, "works well")
 
         conn.query(`
         INSERT INTO votes (postId, userId, vote, createdAt, updatedAt)
@@ -348,9 +351,8 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         callback(null, 'oops, the vote should be either -1 to downvote, 1 to upvote, or 0 to cancel a vote');
       }
     },
+    
     newUser: function(username, password, callback) {
-      //does this user already exist?
-      //console.log('this is the password', password);
       conn.query(`
       SELECT * FROM users
       WHERE username = ?
@@ -387,6 +389,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       });
     },
+    
     checkLogin: function(username, password, callback) {
       conn.query(`
       SELECT * FROM users WHERE username = ?
@@ -420,6 +423,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       });
     },
+    
     getUserSession: function(token, callback) { //when the user logs in, previously... set a cookie with the value userId, then when call isLoggedIn
       conn.query(`
       SELECT * FROM sessions
@@ -438,16 +442,17 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
         else {
           //they're logged in. so... proceed.
+          //console.log('session from getUserSession fn ', session)
           callback(null, session);
         }
       });
     },
+    
     getUserFromSession: function(sessionCookie, callback) {
       conn.query(`
       SELECT * FROM sessions
       WHERE token = ?
       `, [sessionCookie], function(err, userObj) {
-        //console.log("USEROBJ", userObj);
         if (err) {
           console.log(err.stack);
           callback(err);
@@ -457,6 +462,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       });
     },
+    
     deleteCookies: function(){
       
     }
