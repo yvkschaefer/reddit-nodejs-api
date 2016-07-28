@@ -103,8 +103,6 @@ app.get('/createPost', function(request, response) {
 });
 
 app.post('/createPost', function(request, response) {
-  //console.log('show me the request.loggedInUser ', request.loggedInUser);
-  
   if(request.loggedInUser) {
     var userId = request.loggedInUser.userId;
       redditAPI.createPost(request.body, userId, function(err, result) {
@@ -119,15 +117,12 @@ app.post('/createPost', function(request, response) {
   } else {
      response.redirect('/login');
   }
-  
 });
 
 
 function checkLoginToken(request, response, next) {
-  // console.log('Request.cookies.SESSION: ' + request.cookies.SESSION);
   if (request.cookies.SESSION) {
     redditAPI.getUserFromSession(request.cookies.SESSION, function(err, user) {
-        //console.log('got here ', user);
       if (err) {
         response.send(err.toString());
       }
@@ -148,6 +143,15 @@ function checkLoginToken(request, response, next) {
   }
 }
 
+if (err){ 
+	   		console.log(err.stack);
+	   		response.send('an error occured. please try again later!');
+	   	}
+	   	else {
+	   		console.log(result);
+	   		response.send(null, result);
+	   	}
+	   
 
 
 var server = app.listen(process.env.PORT, process.env.IP, function() {

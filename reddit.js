@@ -86,12 +86,12 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
       });
     },
     
-    createPost: function(post, userIdfromSession, callback) { //this somehow needs to take user from checkLoginToken and then, (94)
+    createPost: function(post, userId, callback) { //this somehow needs to take user from checkLoginToken and then, (94)
       //console.log(post);
       conn.query(
         `INSERT INTO posts (userId, title, url, createdAt, updatedAt, subredditId) 
         VALUES (?, ?, ?, ?, ?, ?)
-        `, [userIdfromSession, post.title, post.url, new Date(), new Date(), post.subredditId],//cont 89, instead of post.userId, I need user.userId
+        `, [userId, post.title, post.url, new Date(), new Date(), post.subredditId],//cont 89, instead of post.userId, I need user.userId
         function(err, result) {
           if (err) {
             callback(err);
