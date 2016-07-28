@@ -3,6 +3,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var cookie = require('cookie');
 
 require('longjohn');
 var mysql = require('mysql');
@@ -26,7 +27,8 @@ app.disable('x-powered-by');
 app.use(bodyParser.urlencoded({ //says every request that comes in through my express server, before going to the fn, it's going to go through another fn that's going to pre-process my request. helps me get more interesting request obj. this one parses the body.
   extended: false
 }));
-app.use(cookieParser());
+app.use(cookieParser()); //this middleware will add a `cookies` property to the request, an object of key:value pairs for all the cookies we set
+
 
 //okay let's do some signing up. give the user a form, sign em up
 
@@ -52,7 +54,7 @@ app.get('/signup', function(request, response) {
 
 
 app.post('/signup', function(request, response) {
-  console.log(request.body);
+  //console.log(request.body);
   if (request.body.username.length < 2 || request.body.password.length < 2) {
     response.status(400).send('please make both your username and password longer than three characters');
   }
@@ -89,13 +91,14 @@ app.get('/login', function(request, response) {
   </div>
 </form>
 `;
-  console.log(request.body);
+  //console.log(request.body);
   response.send(loginForm);
 });
 
 app.post('/login', function(request, response) {
   //console.log(request.body);
   redditAPI.checkLogin(request.body.username, request.body.password, function(err, user) {
+   // console.log(user);
     if (err) {
       //console.log(request.body.username);
       //console.log(request.body.password);
@@ -106,12 +109,12 @@ app.post('/login', function(request, response) {
       //we have to create a token and send it to the user in his cookies, then add it to our sessions table!
 
       //console.log('Is this working?');
-      redditAPI.createSession(user.id, function(err, token) {
+      redditAPI.createSession(user.id, function(err, token) { //used to say user.id and it worked
         if (err) {
           response.status(500).send('an error occured. please try again later!');
         }
         else {
-          //console.log(token);
+          //console.log(user.id);
           response.cookie('SESSION', token); //the secret token is now in the user's cookies! ... the token is the cookie
           response.redirect('/');
           //console.log('cookie: ' + JSON.stringify(request.cookies));
@@ -120,6 +123,8 @@ app.post('/login', function(request, response) {
     }
   });
 });
+
+
 
 //homepage
 
@@ -174,9 +179,6 @@ app.get('/createPost', function(request, response) {
           <div>
             <input type="text" name="title" placeholder="Enter the title of your post">
           </div>
-          <div>
-            <input type="text" name="subredditId" placeholder="subreddit ID of your post">
-          </div>
             <button type="submit">Create!</button>
         </form>
          <div>
@@ -189,30 +191,49 @@ app.get('/createPost', function(request, response) {
 });
 
 app.post('/createPost', function(request, response) {
-    //console.log(request.cookies.SESSION);
-    redditAPI.getUserSession(request.cookies.SESSION, function(err, session){
-      if(err){
-        response.send(err.toString());
-      }
-      else{
-        console.log('url: ' + request.body.url + ' title: ' + request.body.title + ' subredditId: ' + request.body.subredditId);
-        //response.send('/');
-        redditAPI.createPost(request.body, function (err, result){
-          if(err){
-            console.log(err.stack);
-            response.status(500).send('an error occured. please try again later!');
-          }
-          else{
-            console.log('the end?');
-            response.send('/');
-          }
-        });
-      }
-    });
+  //console.log(request.cookies.SESSION);
+  redditAPI.getUserSession(request.cookies.SESSION, function(err, session) {
+    if (err) {
+      response.send(err.toString());
+    }
+    else {
+      console.log('url: ' + request.body.url + ' title: ' + request.body.title);
+      redditAPI.createPost(request.body, function(err, result) {
+        if (err) {
+          console.log(err.stack);
+          response.status(500).send('an error occured. please try again later!');
+        }
+        else {
+          response.redirect('/');
+        }
+      });
+    }
+  });
 });
 
 
+function checkLoginToken(request, response, next) {
+  // console.log('Request.cookies.SESSION: ' + request.cookies.SESSION);
 
+  if (request.cookies.SESSION) {
+    redditAPI.getUserFromSession(request.cookies.SESSION, function(err, user) {
+      if (err) {
+        response.send(err.toString());
+      }
+      else if (user) {
+        request.loggedInUser = user;
+      }
+      else {
+        next();
+      }
+    });
+  }
+  else {
+    next();
+  }
+}
+
+//app.use(checkLoginToken);
 
 
 var server = app.listen(process.env.PORT, process.env.IP, function() {

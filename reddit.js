@@ -11,22 +11,22 @@ var cookieParser = require('cookie-parser');
 
 module.exports = function RedditAPI(conn) { //the conn that you pass here must be a valid mysql connection
   return {
-    createSessionToken: function(){
+    createSessionToken: function() {
       //console.log('HELLO');
       return secureRandom.randomArray(100).map(code => code.toString(36)).join('');
     },
-    createSession: function(userId, callback){
+    createSession: function(userId, callback) {
       var token = this.createSessionToken();
       //console.log('Hello');
-      
+
       conn.query(`
       INSERT INTO sessions SET userId = ?, token = ?, createdAt = ?
-      `, [userId, token, new Date()], function (err, result){
-        if (err){
+      `, [userId, token, new Date()], function(err, result) {
+        if (err) {
           callback(err);
         }
         else {
-          //console.log(token);
+          //console.log("TOKEN", token);
           callback(null, token); //this is the secret session token
         }
       });
@@ -90,7 +90,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
       conn.query(
         `INSERT INTO posts (userId, title, url, createdAt, updatedAt, subredditId) 
         VALUES (?, ?, ?, ?, ?, ?)
-        `, [post.userId, post.title, post.url, new Date(), new Date(), post.subredditId],
+        `, [post.userId, post.title, post.url, new Date(), new Date(), 1],
         function(err, result) {
           //console.log("HELLO", subredditId);
           if (err) {
@@ -410,7 +410,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
               callback(err);
             }
             else if (result === true) {
-              callback(null, username);
+              callback(null, user);
             }
             else {
               callback(new Error('username or password incorrect'));
@@ -419,16 +419,16 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
       });
     },
-    getUserSession: function(token, callback){//when the user logs in, previously... set a cookie with the value userId, then when call isLoggedIn
+    getUserSession: function(token, callback) { //when the user logs in, previously... set a cookie with the value userId, then when call isLoggedIn
       conn.query(`
       SELECT * FROM sessions
       WHERE token = ?
-      `, [token], function(err, session){
-        if(err){
+      `, [token], function(err, session) {
+        if (err) {
           console.log(err.stack);
           callback(err);
         }
-        else if(session.length === 0){
+        else if (session.length === 0) {
           callback(new Error(`
             you must be logged in to do this.
             please <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/login">login</a> 
@@ -440,6 +440,24 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
           callback(null, session);
         }
       });
+    },
+    getUserFromSession: function(sessionCookie, callback) {
+      conn.query(`
+      SELECT * FROM sessions
+      WHERE token = ?
+      `, [sessionCookie], function(err, userObj) {
+        //console.log("USEROBJ", userObj);
+        if (err) {
+          console.log(err.stack);
+          callback(err);
+        }
+        else {
+          callback(null, userObj[0]);
+        }
+      });
+    },
+    deleteCookies: function(){
+      
     }
   };
 };
