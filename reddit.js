@@ -90,7 +90,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
       conn.query(
         `INSERT INTO posts (userId, title, url, createdAt, updatedAt, subredditId) 
         VALUES (?, ?, ?, ?, ?, ?)
-        `, [post.userId, post.title, post.url, new Date(), new Date(), 1],
+        `, [post.userId, post.title, post.url, new Date(), new Date(), post.subredditId],
         function(err, result) {
           //console.log("HELLO", subredditId);
           if (err) {

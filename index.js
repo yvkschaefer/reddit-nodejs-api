@@ -4,6 +4,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var cookie = require('cookie');
+var ejs = require('ejs');
 
 require('longjohn');
 var mysql = require('mysql');
@@ -23,33 +24,19 @@ var redditAPI = reddit(connection);
 var app = express();
 
 app.disable('x-powered-by');
+app.set('view engine', 'ejs'); 
 
 app.use(bodyParser.urlencoded({ //says every request that comes in through my express server, before going to the fn, it's going to go through another fn that's going to pre-process my request. helps me get more interesting request obj. this one parses the body.
   extended: false
 }));
 app.use(cookieParser()); //this middleware will add a `cookies` property to the request, an object of key:value pairs for all the cookies we set
 
+app.use('/files', express.static(__dirname + '/static'));
 
 //okay let's do some signing up. give the user a form, sign em up
 
 app.get('/signup', function(request, response) {
-  var signupForm = `
-  <form action='/signup' method='POST'>
-    <div>
-      <input type='text' name='username' placeholder='choose your own unique username!'>
-    </div>
-    <div>
-      <input type='text' name='password' placeholder='choose a password that isn't easy to guess!'>
-    </div>
-    <button type='submit'>Sign Up!</button>
-    <div>
-      already signed up? login <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/login">here</a>
-    </div>
-    <div>
-      <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>
-    </div>
-  `;
-  response.send(signupForm);
+  response.render('signup.ejs');
 });
 
 
@@ -74,25 +61,7 @@ app.post('/signup', function(request, response) {
 
 
 app.get('/login', function(request, response) {
-  var loginForm = `
-<form action='/login' method='POST'>
-  <div>
-    <input type='text' name='username' placeholder='Enter your username here'>
-  </div>
-  <div>
-    <input type='text' name='password' placeholder='Enter your password here'>
-  </div>
-  <button type='submit'>Login!</button>
-  <div>
-    don't have an account? sign-up <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/signup">here</a>
-  </div>
-  <div>
-    <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>
-  </div>
-</form>
-`;
-  //console.log(request.body);
-  response.send(loginForm);
+  response.render('login.ejs');
 });
 
 app.post('/login', function(request, response) {
@@ -129,65 +98,11 @@ app.post('/login', function(request, response) {
 //homepage
 
 app.get('/', function(request, response) {
-  var homepage = `<!DOCTYPE html>
-<html>
-<head>
-<link type="text/css" rel="stylesheet" href="Styles/karastylesheet.css"/>
-<title>reddit: the front page of week four</title>
-</head>
-<body style="background-color:lightgrey"
-	<table>
-		<thead>
-		</thead>	
-		<tbody>
-				<td><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/login">Login</a></td>
-				<td><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/signup">Register</a></td>
-		</tbody>
-	</table>
-		<table>
-		<thead>
-		</thead>
-		<tbody>
-				<td>Top</td>
-				<td>Hot</td>
-				<td>New</td>
-				<td>Controversial</td>
-		</tbody>
-	  </table>
-	  <table>
-	  <thead>
-  	</thead>
-	  <tbody>
-	    <td><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/createPost">Create Post</a></td>
-</body>
-</html>`;
-  response.send(homepage);
+  response.render('homepage.ejs');
 });
 
 app.get('/createPost', function(request, response) {
-  var createPost = `
-     <!DOCTYPE html>
-     <html>
-       <head>
-         <title>create a post</title>
-       </head>
-       <body>
-        <form action="/createPost" method="POST">
-          <div>
-            <input type="text" name="url" placeholder="Enter a URL for your post">
-          </div>
-          <div>
-            <input type="text" name="title" placeholder="Enter the title of your post">
-          </div>
-            <button type="submit">Create!</button>
-        </form>
-         <div>
-           <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>
-         </div>
-       </body>
-     </html>
-     `;
-  response.send(createPost);
+  response.render('createpost.ejs');
 });
 
 app.post('/createPost', function(request, response) {
