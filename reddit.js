@@ -155,14 +155,12 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         callback = options;
         options = {};
       }
-
-
       var sortMethod;
       if (sortingMethod === 'top') {
-        sortMethod = 'voteScore'
+        sortMethod = 'voteScore';
       }
       if (sortingMethod === 'hot') {
-        sortMethod = 'voteScore' / 'p.createdAt'
+        sortMethod = 'voteScore' / 'p.createdAt';
       }
 
       var limit = options.numPerPage || 25; // if options.numPerPage is "falsy" then use 25
@@ -214,6 +212,21 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
           }
         }
       );
+    },
+    
+    getPosts: function (callback){
+      conn.query(`
+      SELECT * FROM posts
+      ORDER BY createdAt
+      LIMIT 25;
+      `, function (err, posts){
+        if (err){
+          callback (err);
+        }
+        else {
+          callback (null, posts);
+        }
+      });
     },
     
     getAllPostsForUser: function(userId, options, callback) {

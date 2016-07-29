@@ -107,45 +107,44 @@ app.use(bodyParser.urlencoded({ //says every request that comes in through my ex
 // });
 
 
-// app.get('/posts', function(request, response) {
-//     console.log('Hey, got your request!');
-//     redditAPI.getFiveLatestPosts(22, function(err, res) {
-//         if (err) {
-//             response.status(500).send('try again later');
-//             console.log(err.stack);
-//         }
-//         else {
-//             console.log(res);
+app.get('/posts', function(request, response) {
+    redditAPI.getFiveLatestPosts(33, function(err, res) {
+        if (err) {
+            response.status(500).send('try again later');
+            console.log(err.stack);
+        }
+        else {
+            console.log(res);
 
-//             function createLi(post) {
-//                 return `
-//                 <li class = "content-item">
-//                     <h3 class="content-item__title"><p>
-//                         Post Title: ${post.title}
-//                     </p>
-//                     <a href= ${post.url}>${post.url}</a>
-//                     <p>Created By userId: ${post.userId}</p>
-//                     </h3>
-//                 </li>
-//                 `;
-//             }
+            function createLi(post) {
+                return `
+                <li class = "content-item">
+                    <h3 class="content-item__title"><p>
+                        Post Title: ${post.title}
+                    </p>
+                    <a href= ${post.url}>${post.url}</a>
+                    <p>Created By userId: ${post.userId}</p>
+                    </h3>
+                </li>
+                `;
+            }
 
-//             var html = `
-//     <div id="contents">
-//         <h1>List of contents</h1>
-//       <ul class="contents-list">
-//       ${res.map(function(post){
-//           return createLi(post);
-//       }).join('')}
-//       </ul>
-//     </div>
-//     `;
+            var html = `
+    <div id="contents">
+        <h1>List of contents</h1>
+      <ul class="contents-list">
+      ${res.map(function(post){
+          return createLi(post);
+      }).join('')}
+      </ul>
+    </div>
+    `;
 
-//             response.send(html);
-//         }
-//     });
+            response.send(html);
+        }
+    });
 
-// });
+});
 
 
 var form =

@@ -23,9 +23,9 @@
 				<td>Controversial</td>
 		</tbody>
 	  </table>
-	   <% redditAPI.getAllPosts(hot, function(err, result){ %>
-	   				<% insert.title %>
-	   	<% )}; %>
+	  <% posts.forEach(function(post){ %>
+	  	<% post.name %>
+	  <% }) %>
 	  <table>
 	  <thead>
   	</thead>

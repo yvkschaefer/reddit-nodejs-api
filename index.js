@@ -24,7 +24,7 @@ var redditAPI = reddit(connection);
 var app = express();
 
 app.disable('x-powered-by');
-app.set('view engine', 'ejs'); 
+app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({ //says every request that comes in through my express server, before going to the fn, it's going to go through another fn that's going to pre-process my request. helps me get more interesting request obj. this one parses the body.
   extended: false
@@ -95,27 +95,57 @@ app.post('/login', function(request, response) {
 //homepage
 
 app.get('/', function(request, response) {
-  response.render('homepage.ejs');
+  redditAPI.getPosts(function(err, posts) {
+    if (err) {
+      console.log(err);
+      response.status(500).send('an error occured, please try again later!');
+    }
+    else {
+      console.log(posts);
+    response.render('homepage.ejs', {posts: posts});
+    }
+  });
 });
+
+//display posts, not the right way just checking to see if fn works
+
+app.get('/posts', function(request, response){
+  redditAPI.getPosts(function(err, result){
+    if (err){
+      console.log(err.stack);
+      response.send('error, please try again later');
+    }
+    else {
+      response.send(result);
+    }
+  });
+});
+
+
+
+
+
+
 
 app.get('/createPost', function(request, response) {
   response.render('createpost.ejs');
 });
 
 app.post('/createPost', function(request, response) {
-  if(request.loggedInUser) {
+  if (request.loggedInUser) {
     var userId = request.loggedInUser.userId;
-      redditAPI.createPost(request.body, userId, function(err, result) {
-        if (err) {
-          console.log(err.stack);
-          response.status(500).send('an error occured. please try again later!');
-        }
-        else {
-          response.redirect('/');
-        }
-      });
-  } else {
-     response.redirect('/login');
+    redditAPI.createPost(request.body, userId, function(err, result) {
+      if (err) {
+        console.log(err.stack);
+        response.status(500).send('an error occured. please try again later!');
+      }
+      else {
+        response.redirect('/');
+      }
+    });
+  }
+  else {
+    response.redirect('/login');
   }
 });
 
@@ -127,10 +157,10 @@ function checkLoginToken(request, response, next) {
         response.send(err.toString());
       }
       else if (user) {
-        
-       request.loggedInUser = user;
-        
-        
+
+        request.loggedInUser = user;
+
+
         next();
       }
       else {
@@ -143,15 +173,8 @@ function checkLoginToken(request, response, next) {
   }
 }
 
-if (err){ 
-	   		console.log(err.stack);
-	   		response.send('an error occured. please try again later!');
-	   	}
-	   	else {
-	   		console.log(result);
-	   		response.send(null, result);
-	   	}
-	   
+//put my redditAPI.getAllPosts fn into my homepage.ejs file
+
 
 
 var server = app.listen(process.env.PORT, process.env.IP, function() {
