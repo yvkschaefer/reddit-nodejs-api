@@ -102,30 +102,38 @@ app.get('/', function(request, response) {
     }
     else {
       //console.log(posts);
-    response.render('homepage.ejs', {posts: posts});
+      response.render('homepage.ejs', {
+        posts: posts
+      });
     }
   });
 });
 
+//voting
 
-//display posts, not the right way just checking to see if fn works
-
-app.get('/posts', function(request, response){
-  redditAPI.getPosts(function(err, result){
-    if (err){
-      console.log(err.stack);
-      response.send('error, please try again later');
-    }
-    else {
-      response.send(result);
-    }
-  });
+app.post('/vote', function(request, response) {
+  console.log(request.body);
+  if (request.loggedInUser) {
+    var vote = {
+      postId : parseInt(request.body.postId),
+      vote : parseInt(request.body.vote)
+    };
+    var userId = request.loggedInUser.userId;
+    redditAPI.createOrUpdateVote(vote, userId, function(err, newVote) {
+      if (err) {
+        console.log(err.stack);
+        response.status(500).send('an error occured, please try again later!');
+      }
+      else {
+        console.log(newVote);
+        response.redirect('/');
+      }
+    });
+  }
+  else {
+    response.redirect('/login');
+  }
 });
-
-
-
-
-
 
 
 app.get('/createPost', function(request, response) {
@@ -151,6 +159,7 @@ app.post('/createPost', function(request, response) {
 });
 
 
+
 function checkLoginToken(request, response, next) {
   if (request.cookies.SESSION) {
     redditAPI.getUserFromSession(request.cookies.SESSION, function(err, user) {
@@ -173,8 +182,6 @@ function checkLoginToken(request, response, next) {
     next();
   }
 }
-
-//put my redditAPI.getAllPosts fn into my homepage.ejs file
 
 
 

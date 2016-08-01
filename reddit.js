@@ -333,14 +333,14 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
       );
     },
     
-    createOrUpdateVote: function(vote, callback) {
+    createOrUpdateVote: function(vote, userId, callback) {
       if (vote.vote === -1 || vote.vote === 0 || vote.vote === 1) {
 
         conn.query(`
         INSERT INTO votes (postId, userId, vote, createdAt, updatedAt)
         VALUES (?, ?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE vote= ?
-        `, [vote.postId, vote.userId, vote.vote, new Date(), new Date(), vote.vote],
+        `, [vote.postId, userId, vote.vote, new Date(), new Date(), vote.vote],
           function(err, result) {
             if (err) {
               callback(err);
@@ -420,7 +420,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         }
         else {
           var user = result[0];
-          var actualHashedPassword = user.password; //do I need to have a bcrypt.hash //this is where Ziad put a not-so-nifty error
+          var actualHashedPassword = user.password; 
           bcrypt.compare(password, actualHashedPassword, function(err, result) {
             if (err) {
               console.log(err.stack);

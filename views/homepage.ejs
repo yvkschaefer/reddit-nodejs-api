@@ -2,7 +2,7 @@
 <html>
 <head>
 <link type="text/css" rel="stylesheet" href="/files/styles.css"/>
-<title>reddit: the front page of week four</title>
+<title>reddit: the front page of week four and five</title>
 </head>
 <body style="background-color:lightgrey">
 	<table>
@@ -11,6 +11,7 @@
 		<tbody>
 				<td><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/login">Login</a></td>
 				<td><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/signup">Register</a></td>
+				<!--<td><button type='submit'>Logout</button></td>-->
 		</tbody>
 	</table>
 		<table>
@@ -23,16 +24,27 @@
 				<td>Controversial</td>
 		</tbody>
 	  </table>
-	  <p><% posts.forEach(function(post){ %>
+	  <div><% posts.forEach(function(post){ %>
 	  	<h3><%= post.title %></h3>
 	  		<ul>
-	  		<li><%= post.url %></li>
-	  		<li>userId: <%= post.userId %></li>
-	  		<li>Created <%= post.createdAt %></li>
-	  		<li>subredditId: <%= post.subredditId %></li>
+	  			<li><a href="<%= post.url %>">source</a></li>
+	  			<li>userId: <%= post.userId %></li>
+	  			<li>Created <%= post.createdAt %></li>
+	  			<li>subredditId: <%= post.subredditId %></li>
+	  		<form action='/vote' method='post'>
+	  			<input type='hidden' name='vote' value='1'>
+	  			<input type='hidden' name='postId' value='<%= post.id %>'>
+	  			<button type='submit'>&#8593;</button>
+	  		</form>
+			<form action='/vote' method='post'>
+				<input type='hidden' name='vote' value='-1'>
+				<input type='hidden' name='postId' value='<%= post.id %>'>
+				<button type='submit'>&#8595;</button>
+			</form>
+			<li>voteScore:</li>
 	  	<% }) %>
 	  </ul>
-	  </p>
+	  </div>
 	  <table>
 	  <thead>
   	</thead>
