@@ -101,11 +101,12 @@ app.get('/', function(request, response) {
       response.status(500).send('an error occured, please try again later!');
     }
     else {
-      console.log(posts);
+      //console.log(posts);
     response.render('homepage.ejs', {posts: posts});
     }
   });
 });
+
 
 //display posts, not the right way just checking to see if fn works
 

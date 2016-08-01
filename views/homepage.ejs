@@ -23,9 +23,16 @@
 				<td>Controversial</td>
 		</tbody>
 	  </table>
-	  <% posts.forEach(function(post){ %>
-	  	<% post.name %>
-	  <% }) %>
+	  <p><% posts.forEach(function(post){ %>
+	  	<h3><%= post.title %></h3>
+	  		<ul>
+	  		<li><%= post.url %></li>
+	  		<li>userId: <%= post.userId %></li>
+	  		<li>Created <%= post.createdAt %></li>
+	  		<li>subredditId: <%= post.subredditId %></li>
+	  	<% }) %>
+	  </ul>
+	  </p>
 	  <table>
 	  <thead>
   	</thead>
