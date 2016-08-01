@@ -95,7 +95,7 @@ app.post('/login', function(request, response) {
 //homepage
 
 app.get('/', function(request, response) {
-  redditAPI.getPosts(function(err, posts) {
+  redditAPI.getAllPosts(request.query.sort, function(err, posts) {
     if (err) {
       console.log(err);
       response.status(500).send('an error occured, please try again later!');

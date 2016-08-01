@@ -18,19 +18,20 @@
 		<thead>
 		</thead>
 		<tbody>
-				<td>Top</td>
-				<td>Hot</td>
-				<td>New</td>
+				<td><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=top'>Top</a></td>
+				<td><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=hot'>Hot</a></td>
+				<td><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=new'>New</a></td>
 				<td>Controversial</td>
 		</tbody>
 	  </table>
 	  <div><% posts.forEach(function(post){ %>
-	  	<h3><%= post.title %></h3>
+	  	<h3><a href='<%= post.url %>'><%= post.title %></a></h3>
 	  		<ul>
-	  			<li><a href="<%= post.url %>">source</a></li>
-	  			<li>userId: <%= post.userId %></li>
+	  			<li>user id: <%= post.user.username %></li>
 	  			<li>Created <%= post.createdAt %></li>
-	  			<li>subredditId: <%= post.subredditId %></li>
+	  			<li>subreddit id: <%= post.subreddits.id %></li>
+	  			<li>vote score: <%= post.voteScore %></li>
+				<li>vote hotness: <%= (post.voteHotness * 100000).toFixed(2) %></li>
 	  		<form action='/vote' method='post'>
 	  			<input type='hidden' name='vote' value='1'>
 	  			<input type='hidden' name='postId' value='<%= post.id %>'>
@@ -41,9 +42,8 @@
 				<input type='hidden' name='postId' value='<%= post.id %>'>
 				<button type='submit'>&#8595;</button>
 			</form>
-			<li>voteScore:</li>
+	  	</ul>
 	  	<% }) %>
-	  </ul>
 	  </div>
 	  <table>
 	  <thead>

@@ -157,10 +157,17 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
       }
       var sortMethod;
       if (sortingMethod === 'top') {
-        sortMethod = 'voteScore';
+        sortMethod = 'postVoteSum';
       }
-      if (sortingMethod === 'hot') {
-        sortMethod = 'voteScore' / 'p.createdAt';
+      else if (sortingMethod === 'new'){
+        sortMethod = 'postCreatedAt';
+      }
+      else if (sortingMethod === 'controversial'){
+        
+      }
+      else {
+        //this is hot or default
+        sortMethod = 'postHotness';
       }
 
       var limit = options.numPerPage || 25; // if options.numPerPage is "falsy" then use 25
@@ -171,7 +178,9 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
           p.id as postId, p.title, p.url, p.createdAt as postCreatedAt, p.updatedAt as postUpdatedAt, 
           u.id as userId, u.username, u.createdAt as userCreatedAt, u.updatedAt as userUpdatedAt,
           s.id as subredditId, s.name as subredditName, s.description as subredditDescription, s.createdAt as subredditCreatedAt, s.updatedAt as subredditUpdatedAt,
-          sum(v.vote) as voteScore
+          sum(v.vote) AS postVoteSum,
+          (sum(v.vote) / (NOW() - p.createdAt)) AS postHotness
+          
           
         FROM posts as p
         JOIN users as u ON p.userId=u.id
@@ -205,7 +214,8 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
                   createdAt: obj.subredditCreatedAt,
                   updatedAt: obj.subredditUpdatedAt
                 },
-                voteScore: obj.voteScore
+                voteScore: obj.postVoteSum,
+                voteHotness: obj.postHotness
               };
             });
             callback(null, mappedData);
