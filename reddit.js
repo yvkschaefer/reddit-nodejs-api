@@ -4,7 +4,7 @@ const saltRounds = 10;
 var secureRandom = require('secure-random');
 var cookie = require('cookie');
 var cookieParser = require('cookie-parser');
-
+var moment = require('moment');
 
 
 
@@ -195,12 +195,14 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
           }
           else {
             var mappedData = results.map(function(obj) {
+              obj.fromNow = moment(obj.postCreatedAt).fromNow();
               return {
                 postId: obj.postId,
                 title: obj.title,
                 url: obj.url,
                 createdAt: obj.postCreatedAt,
                 updatedAt: obj.postUpdatedAt,
+                fromNow: obj.fromNow,
                 user: {
                   id: obj.userId,
                   username: obj.username,
@@ -487,7 +489,6 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
     },
     
     deleteCookiesFromSession: function(userId, callback){
-      console.log('userId', userId);
       if(userId){
         conn.query(`
         DELETE FROM sessions 

@@ -39,7 +39,7 @@
 	  	<h3><a href='<%= post.url %>'><%= post.title %></a></h3>
 	  		<ul>
 	  			<li>posted by <%= post.user.username %></li>
-	  			<li>created <%= post.createdAt %></li>
+	  			<li>created <%= post.fromNow %></li>
 	  			<li>subreddit id: <%= post.subreddits.id %></li>
 	  			<li>vote score: <%= post.voteScore %></li>
 				<li>vote hotness: <%= (post.voteHotness * 1000000).toFixed(2) %></li>

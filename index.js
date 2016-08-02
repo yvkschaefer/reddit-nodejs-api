@@ -148,7 +148,6 @@ app.post('/createPost', function(request, response) {
 });
 
 app.post('/logout', function(request, response) {
-  console.log('cookies!!! ', request.loggedInUser.userId);
   redditAPI.deleteCookiesFromSession(request.loggedInUser.userId, function(err, result) {
     if (err) {
       console.log(err);
@@ -160,7 +159,6 @@ app.post('/logout', function(request, response) {
     }
   });
 });
-
 
 function checkLoginToken(request, response, next) {
   if (request.cookies.SESSION) {
