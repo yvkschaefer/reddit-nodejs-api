@@ -40,7 +40,6 @@ app.get('/signup', function(request, response) {
   response.render('signup.ejs');
 });
 
-
 app.post('/signup', function(request, response) {
   //console.log(request.body);
   if (request.body.username.length < 2 || request.body.password.length < 2) {
@@ -57,9 +56,6 @@ app.post('/signup', function(request, response) {
     });
   }
 });
-
-//let's go to the login page, give the user a form, and check to see if their login works
-
 
 app.get('/login', function(request, response) {
   response.render('login.ejs');
@@ -90,10 +86,6 @@ app.post('/login', function(request, response) {
   });
 });
 
-
-
-//homepage
-
 app.get('/', function(request, response) {
   redditAPI.getAllPosts(request.query.sort, function(err, posts) {
     if (err) {
@@ -109,14 +101,12 @@ app.get('/', function(request, response) {
   });
 });
 
-//voting
-
 app.post('/vote', function(request, response) {
   console.log(request.body);
   if (request.loggedInUser) {
     var vote = {
-      postId : parseInt(request.body.postId),
-      vote : parseInt(request.body.vote)
+      postId: parseInt(request.body.postId),
+      vote: parseInt(request.body.vote)
     };
     var userId = request.loggedInUser.userId;
     redditAPI.createOrUpdateVote(vote, userId, function(err, newVote) {
@@ -134,7 +124,6 @@ app.post('/vote', function(request, response) {
     response.redirect('/login');
   }
 });
-
 
 app.get('/createPost', function(request, response) {
   response.render('createpost.ejs');
@@ -158,6 +147,19 @@ app.post('/createPost', function(request, response) {
   }
 });
 
+app.post('/logout', function(request, response) {
+  console.log('cookies!!! ', request.loggedInUser.userId);
+  redditAPI.deleteCookiesFromSession(request.loggedInUser.userId, function(err, result) {
+    if (err) {
+      console.log(err);
+      response.status(500).send('could not reach cookies');
+    }
+    else {
+      response.clearCookie('SESSION');
+      response.redirect('/');
+    }
+  });
+});
 
 
 function checkLoginToken(request, response, next) {
@@ -167,10 +169,7 @@ function checkLoginToken(request, response, next) {
         response.send(err.toString());
       }
       else if (user) {
-
         request.loggedInUser = user;
-
-
         next();
       }
       else {

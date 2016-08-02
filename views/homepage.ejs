@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link type="text/css" rel="stylesheet" href="/files/styles.css"/>
-<title>reddit: the front page of week four and five</title>
+	<meta charset="UTF-8">
+	<link type="text/css" rel="stylesheet" href="/files/styles.css"/>
+	<title>reddit: the front page of week four and five</title>
 </head>
 <body style="background-color:lightgrey">
-	<table>
-		<thead>
-		</thead>	
+	<nav>
+		<table>
+			<thead>
+			</thead>	
 		<tbody>
 				<td><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/login">Login</a></td>
 				<td><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/signup">Register</a></td>
-				<!--<td><button type='submit'>Logout</button></td>-->
+				<td>
+					<form action='/logout' method='post'>
+					<input type='hidden' name='logout' value='cookies'>
+					<button type='submit'>Logout</button>
+					</form>
+				</td>
 		</tbody>
 	</table>
 		<table>
@@ -24,6 +31,10 @@
 				<td><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=controversial'>Controversial</a></td>
 		</tbody>
 	  </table>
+	   <div>
+	  	<a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/createPost">Create Post</a>
+	  </div>
+	  </nav>
 	  <div><% posts.forEach(function(post){ %>
 	  	<h3><a href='<%= post.url %>'><%= post.title %></a></h3>
 	  		<ul>
@@ -31,7 +42,8 @@
 	  			<li>created <%= post.createdAt %></li>
 	  			<li>subreddit id: <%= post.subreddits.id %></li>
 	  			<li>vote score: <%= post.voteScore %></li>
-				<li>vote hotness: <%= (post.voteHotness * 100000).toFixed(2) %></li>
+				<li>vote hotness: <%= (post.voteHotness * 1000000).toFixed(2) %></li>
+			</ul>
 	  		<form action='/vote' method='post'>
 	  			<input type='hidden' name='vote' value='1'>
 	  			<input type='hidden' name='postId' value='<%= post.id %>'>
@@ -42,13 +54,7 @@
 				<input type='hidden' name='postId' value='<%= post.id %>'>
 				<button type='submit'>&#8595;</button>
 			</form>
-	  	</ul>
 	  	<% }) %>
 	  </div>
-	  <table>
-	  <thead>
-  	</thead>
-	  <tbody>
-	    <td><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/createPost">Create Post</a></td>
-</body>
+	</body>
 </html>

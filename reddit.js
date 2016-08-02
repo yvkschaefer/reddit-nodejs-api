@@ -486,8 +486,22 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
       });
     },
     
-    deleteCookies: function(){
-      
+    deleteCookiesFromSession: function(userId, callback){
+      console.log('userId', userId);
+      if(userId){
+        conn.query(`
+        DELETE FROM sessions 
+        WHERE userId = ?
+        `,[userId], function(err, result) {
+            if(err){
+              console.log(err.stack);
+              callback(err);
+            }
+            else {
+              callback(null, result);
+            }
+        });
+      }
     }
   };
 };
