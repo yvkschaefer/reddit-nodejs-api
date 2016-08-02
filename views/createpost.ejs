@@ -1,24 +1,18 @@
 <!DOCTYPE html>
      <html>
        <head>
-         <link type="text/css" rel="stylesheet" href="/files/forms.css"/>
+         <link type="text/css" rel="stylesheet" href="/files/styles.css"/>
          <title>create a post</title>
        </head>
        <body>
-       <h2>
+       <div>
         <form action="/createPost" method="POST">
-          <div>
             <input type="text" name="url" placeholder="URL for your post">
-          </div>
-          <div>
             <input type="text" name="title" placeholder="your post's title">
-          </div>
-          <div>
             <input type="text" name="subredditId" placeholder="subredditId">
-          </div>
             <button type="submit">Create Post!</button>
         </form>
-        </h2>
+        </div>
         <div>
           <table>
             <thead>
@@ -43,8 +37,8 @@
             </tbody>
           </table>
         </div>
-         <div>
+         <nav>
            <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>
-         </div>
+         </nav>
        </body>
      </html>
