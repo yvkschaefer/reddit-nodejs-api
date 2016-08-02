@@ -21,14 +21,14 @@
 				<td><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=top'>Top</a></td>
 				<td><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=hot'>Hot</a></td>
 				<td><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=new'>New</a></td>
-				<td>Controversial</td>
+				<td><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=controversial'>Controversial</a></td>
 		</tbody>
 	  </table>
 	  <div><% posts.forEach(function(post){ %>
 	  	<h3><a href='<%= post.url %>'><%= post.title %></a></h3>
 	  		<ul>
-	  			<li>user id: <%= post.user.username %></li>
-	  			<li>Created <%= post.createdAt %></li>
+	  			<li>posted by <%= post.user.username %></li>
+	  			<li>created <%= post.createdAt %></li>
 	  			<li>subreddit id: <%= post.subreddits.id %></li>
 	  			<li>vote score: <%= post.voteScore %></li>
 				<li>vote hotness: <%= (post.voteHotness * 100000).toFixed(2) %></li>

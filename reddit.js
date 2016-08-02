@@ -163,7 +163,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         sortMethod = 'postCreatedAt';
       }
       else if (sortingMethod === 'controversial'){
-        
+        sortMethod = 'contra';
       }
       else {
         //this is hot or default
@@ -179,8 +179,8 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
           u.id as userId, u.username, u.createdAt as userCreatedAt, u.updatedAt as userUpdatedAt,
           s.id as subredditId, s.name as subredditName, s.description as subredditDescription, s.createdAt as subredditCreatedAt, s.updatedAt as subredditUpdatedAt,
           sum(v.vote) AS postVoteSum,
-          (sum(v.vote) / (NOW() - p.createdAt)) AS postHotness
-          
+          (sum(v.vote) / (NOW() - p.createdAt)) AS postHotness,
+          (if((count(if(vote=1, 1, null))>count(if(vote=-1, 1, null))),(sum(vote) * count(if(vote=1, 1, null))) / count(if(vote=-1, 1, null)),null)) as contra
           
         FROM posts as p
         JOIN users as u ON p.userId=u.id
