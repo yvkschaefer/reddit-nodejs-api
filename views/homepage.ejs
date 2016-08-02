@@ -10,48 +10,50 @@
 		<table>
 			<thead>
 			</thead>	
-		<tbody>
-				<td><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/login">Login</a></td>
-				<td><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/signup">Register</a></td>
+			<tbody>
+				<td><h3><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/login">Login</a></h3></td>
+				<td><h3><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/signup">Register</a></h3></td>
 				<td>
 					<form action='/logout' method='post'>
 					<input type='hidden' name='logout' value='cookies'>
-					<button type='submit'>Logout</button>
+					<button type='submit'><h2>Logout</h2></button>
 					</form>
 				</td>
-		</tbody>
-	</table>
+			</tbody>
+		</table>
+	</nav>
+	<nav>
 		<table>
 		<thead>
 		</thead>
 		<tbody>
-				<td><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=top'>Top</a></td>
-				<td><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=hot'>Hot</a></td>
-				<td><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=new'>New</a></td>
-				<td><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=controversial'>Controversial</a></td>
+				<td><h3><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=top'>Top</a></h3></td>
+				<td><h3><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=hot'>Hot</a></h3></td>
+				<td><h3><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=new'>New</a></h3></td>
+				<td><h3><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=controversial'>Controversial</a></h3></td>
 		</tbody>
 	  </table>
-	   <div>
-	  	<a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/createPost">Create Post</a>
+	  <div>
+	  	<h3><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/createPost">Create Post</a></h3>
 	  </div>
 	  </nav>
 	  <div><% posts.forEach(function(post){ %>
-	  	<h3><a href='<%= post.url %>'><%= post.title %></a></h3>
+	  	<h2><a href='<%= post.url %>'><%= post.title %></a></h2>
 	  		<ul>
-	  			<li>posted by <%= post.user.username %></li>
-	  			<li>created <%= post.fromNow %></li>
-	  			<li>subreddit id: <%= post.subreddits.id %></li>
-	  			<li>vote score: <%= post.voteScore %></li>
-				<li>vote hotness: <%= (post.voteHotness * 1000000).toFixed(2) %></li>
+	  			<li><h4>posted by <%= post.user.username %></h4></li>
+	  			<li><h4>created <%= post.fromNow %></h4></li>
+	  			<li><h4>subreddit id: <%= post.subreddits.id %></h4></li>
+	  			<li><h4>vote score: <%= post.voteScore %></h4></li>
+				<li><h4>vote hotness: <%= (post.voteHotness * 1000000).toFixed(2) %></h4></li>
 			</ul>
 	  		<form action='/vote' method='post'>
 	  			<input type='hidden' name='vote' value='1'>
-	  			<input type='hidden' name='postId' value='<%= post.id %>'>
+	  			<input type='hidden' name='postId' value='<%= post.postId %>'>
 	  			<button type='submit'>&#8593;</button>
 	  		</form>
 			<form action='/vote' method='post'>
 				<input type='hidden' name='vote' value='-1'>
-				<input type='hidden' name='postId' value='<%= post.id %>'>
+				<input type='hidden' name='postId' value='<%= post.postId %>'>
 				<button type='submit'>&#8595;</button>
 			</form>
 	  	<% }) %>

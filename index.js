@@ -3,8 +3,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var cookie = require('cookie');
-var ejs = require('ejs');
+
 
 require('longjohn');
 var mysql = require('mysql');
@@ -86,14 +85,14 @@ app.post('/login', function(request, response) {
   });
 });
 
-app.get('/', function(request, response) {
+app.get('/', function(request , response) {
   redditAPI.getAllPosts(request.query.sort, function(err, posts) {
     if (err) {
       console.log(err);
       response.status(500).send('an error occured, please try again later!');
+      //response.redirect('/error.ejs');
     }
     else {
-      //console.log(posts);
       response.render('homepage.ejs', {
         posts: posts
       });
@@ -102,7 +101,7 @@ app.get('/', function(request, response) {
 });
 
 app.post('/vote', function(request, response) {
-  console.log(request.body);
+  console.log('vote postId', request.body.postId);
   if (request.loggedInUser) {
     var vote = {
       postId: parseInt(request.body.postId),
@@ -113,6 +112,7 @@ app.post('/vote', function(request, response) {
       if (err) {
         console.log(err.stack);
         response.status(500).send('an error occured, please try again later!');
+        response.redirect('/error.ejs');
       }
       else {
         console.log(newVote);

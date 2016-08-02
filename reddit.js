@@ -185,7 +185,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
         FROM posts as p
         JOIN users as u ON p.userId=u.id
         JOIN subreddits as s ON p.subredditId=s.id
-        JOIN votes as v ON p.id=v.postId
+        LEFT OUTER JOIN votes as v ON p.id=v.postId
         GROUP BY postId
         ORDER BY ?? DESC
         LIMIT ? OFFSET ?`, [sortMethod, limit, offset],
@@ -200,9 +200,8 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
                 postId: obj.postId,
                 title: obj.title,
                 url: obj.url,
-                createdAt: obj.postCreatedAt,
-                updatedAt: obj.postUpdatedAt,
                 fromNow: obj.fromNow,
+                updatedAt: obj.postUpdatedAt,
                 user: {
                   id: obj.userId,
                   username: obj.username,
@@ -220,6 +219,7 @@ module.exports = function RedditAPI(conn) { //the conn that you pass here must b
                 voteHotness: obj.postHotness
               };
             });
+            //console.log(mappedData.length);
             callback(null, mappedData);
           }
         }
