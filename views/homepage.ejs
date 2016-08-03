@@ -44,7 +44,7 @@
 	  		<ul>
 	  			<li><h4>posted by <%= post.user.username %></h4></li>
 	  			<li><h4>created <%= post.fromNow %></h4></li>
-	  			<li><h4>subreddit id: <%= post.subreddits.id %></h4></li>
+	  			<li><h4>subreddit: <%= post.subreddits.name %></h4></li>
 	  			<li><h4>vote score: <%= post.voteScore %></h4></li>
 				<li><h4>vote hotness: <%= (post.voteHotness * 1000000).toFixed(2) %></h4></li>
 			</ul>
