@@ -2,40 +2,23 @@
      <html>
        <head>
          <link type="text/css" rel="stylesheet" href="/files/styles.css"/>
+         <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>
          <title>create a post</title>
        </head>
        <body>
-       <div>
-        <form action="/createPost" method="POST">
+        <form class = "createPostForm" action="/createPost" method="POST">
             <input type="text" name="url" placeholder="URL for your post">
             <input type="text" name="title" placeholder="your post's title">
             <input type="text" name="subredditId" placeholder="subredditId">
             <button type="submit">Create Post!</button>
         </form>
-        </div>
-        <div>
-          <table class="subredditsTable">
-            <thead>
-              <td colspan="3"><h5>subredditId options</h5></td>
-            </thead>
-            <tbody>
-              <tr>
-                <td><h6>3</h6></td>
-                <td><h6>velo</h6></td>
-                <td><h6>bikesbikesbikes</h6></td>
-              </tr>
-              <tr>
-                <td><h6>4</h6></td>
-                <td><h6>montreal culture</h6></td>
-                <td><h6>culture stuff</h6></td>
-              </tr>
-              <tr>
-                <td><h6>6</h6></td>
-                <td><h6>other</h6></td>
-                <td><h6>anything you like!</h6></td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="subredditsBox">
+            <div class="subredditsBoxTitle">subreddits</div>
+            <div class="subredditId3">3: bicycles!</div>
+            <div class="subredditId4">4: montreal culture</div>
+            <div class="subredditId6">6: politics</div>
+            <div class="subredditId7">7: health</div>
+            <div class="subredditId8">8: other</div>
         </div>
          <nav>
            <a class="homepageCreatePost" href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>

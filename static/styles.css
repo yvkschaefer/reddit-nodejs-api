@@ -7,6 +7,9 @@ h2 {
  font-style: oblique;
 }
 
+ul {
+    list-style-type: none;
+}
 
 h3 {
     font-family: sans-serif;
@@ -37,9 +40,7 @@ a {
 table, td {
     border: none;
     font-family: Verdana;
-    font-size: 20px;
-    margin-right: 0;
-    padding: inherit;
+    font-size: 1.5em;
     max-width: 200px;
     max-height: 50px;
 }
@@ -51,7 +52,9 @@ body {
   color: #F2BFEE;
   font-family: monospace;
   padding-top: 5em;
-  display: flex;
+  padding-left: 2em;
+  display: inline;
+  margin-left: 1em;
 }
 
 /* DEMO-SPECIFIC STYLES */
@@ -83,15 +86,17 @@ h1 {
     margin: auto;
 }
 
-.subredditsTable {
-    font-size: 2em;
-    margin: 4px;
-    padding: 6px;
-    border: dashed;
-    border-width: 3px;
-}
-
 .homepageCreatePost {
     font-size: 20px;
     margin: 10px;
+}
+
+
+.createPostForm {
+    font-family: Source Sans Pro;
+}
+
+.postTitles {
+    font-family: Montserrat;
+    margin-top: .4em;
 }
