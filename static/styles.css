@@ -88,12 +88,29 @@ h1 {
 
 .homepageCreatePost {
     font-size: 2.2em;
-    margin: 10px;
+    margin-left: 1.4em;
 }
 
 
 .createPostForm {
     font-family: Source Sans Pro;
+    padding-top: 4em;
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    margin-left: 2em;
+}
+
+.createPostButton {
+    margin-left: 2em;
+    margin-top: 0.5em;
+    background: rgba(255, 255, 255, 0.2);
+    border: 0.3em white solid;
+    align-items: center;
+    border-radius: 0.2em;
+    padding: 0.8em 0.8em 2em 0.8em;
+    font-size:0.8em;
+    color:rgba(199, 142, 199, 0.8);
 }
 
 .postTitles {
@@ -106,15 +123,17 @@ h1 {
     font-size: 1.5em;
     text-align: left;
     text-shadow: 4px 4px 0 rgba(0,0,0,0.1);
-    padding: 10px;
+    padding: 0.3em;
     display: flex;
     flex-direction: column;
-    width: 200px;
+    width: 245px;
+    margin-left: 2em;
 }
 
 /*can't get this to work, was hoping to make the box contents smaller than title*/
 .subredditsBoxes {
     font-size: 1em;
+    padding-left: 1em;
 }
 
 .subredditId3 { background: #9b59b6;}
