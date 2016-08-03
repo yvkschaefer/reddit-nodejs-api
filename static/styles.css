@@ -95,11 +95,57 @@ h1 {
     /*a small battle for another time*/
 }
 
+.containerPosts {
+    padding: 0 0 0 0;
+    display: flex;
+    flex-direction: column;
+    border: 5px solid goldenrod;
+    justify-content: flex-start;
+}
 
+.containerPost {
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 0 1em 5em 0;
+}
 
+.leftContainerPosts {
+    display: flex;
+    flex-direction: column;
+    border: 1.5px solid goldenrod;
+}
 
+.rightContainerPosts {
+    display: flex;
+    flex-direction: column;
+    border: 1.5px solid goldenrod;
+}
 
+.titlesSubredditsContainer {
+    display: flex;
+    flex-direction: column;
+    border: 1.5px solid goldenrod;
+}
 
+.flexVotingInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.flexUpvote {
+    display: flex;
+    flex-direction: column;
+}
+
+.flexUsername {
+    display: flex;
+    flex-direction: column;
+}
+
+.flexDate {
+    display: flex;
+    flex-direction: column;
+}
 
 .createPostForm {
     font-family: Source Sans Pro;
