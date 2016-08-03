@@ -17,7 +17,7 @@
 				<td>
 					<form action='/logout' method='post'>
 					<input type='hidden' name='logout' value='cookies'>
-					<button type='submit'><h2>Logout</h2></button>
+					<button type='submit'><h2 class="logoutButton">Logout</h2></button>
 					</form>
 				</td>
 			</tbody>
@@ -42,21 +42,21 @@
 	  <main><% posts.forEach(function(post){ %>
 	  	<h2 class="postTitles"><a href='<%= post.url %>'><%= post.title %></a></h2>
 	  		<ul>
-	  			<li><h4>posted by <%= post.user.username %></h4></li>
-	  			<li><h4>created <%= post.fromNow %></h4></li>
-	  			<li><h4>subreddit: <%= post.subreddits.name %></h4></li>
-	  			<li><h4>vote score: <%= post.voteScore %></h4></li>
-				<li><h4>vote hotness: <%= (post.voteHotness * 1000000).toFixed(2) %></h4></li>
+	  			<li><h4 class="flexUsername">posted by <%= post.user.username %></h4></li>
+	  			<li><h4 class="flexDate">created <%= post.fromNow %></h4></li>
+	  			<li><h4 class="flexSubreddits">/r/<%=post.subreddits.name %></h4></li>
+	  			<li><h4 class="flexVoteScore">vote score: <%= post.voteScore %></h4></li>
+				<li><h4 class="flexVoteHotness">vote hotness: <%= (post.voteHotness * 1000000).toFixed(2) %></h4></li>
 			</ul>
 	  		<form action='/vote' method='post'>
 	  			<input type='hidden' name='vote' value='1'>
 	  			<input type='hidden' name='postId' value='<%= post.postId %>'>
-	  			<button type='submit'>&#8593;</button>
+	  			<button type="submit" class="flexUpvote">&#8593;</button>
 	  		</form>
 			<form action='/vote' method='post'>
 				<input type='hidden' name='vote' value='-1'>
 				<input type='hidden' name='postId' value='<%= post.postId %>'>
-				<button type='submit'>&#8595;</button>
+				<button type="submit" class="flexDownvote">&#8595;</button>
 			</form>
 	  	<% }) %>
 	  </main>
