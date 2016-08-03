@@ -34,10 +34,14 @@ a {
   color: #E8DDE1;
 }
 
-table {
-    border: 1px solid black;
+table, td {
+    border: none;
     font-family: Verdana;
-    margin-right: auto;
+    font-size: 20px;
+    margin-right: 0;
+    padding: inherit;
+    max-width: 200px;
+    max-height: 50px;
 }
 
 /*source: https://css-tricks.com/snippets/css/typewriter-effect/ */
@@ -77,4 +81,17 @@ body {
 h1 {
     font-size: 2em;
     margin: auto;
+}
+
+.subredditsTable {
+    font-size: 2em;
+    margin: 4px;
+    padding: 6px;
+    border: dashed;
+    border-width: 3px;
+}
+
+.homepageCreatePost {
+    font-size: 20px;
+    margin: 10px;
 }
