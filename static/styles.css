@@ -57,6 +57,7 @@ body {
   margin-left: 1em;
 }
 
+
 /* DEMO-SPECIFIC STYLES */
 .typewriter {
   overflow: hidden; /* Ensures the content is not revealed until the animation */
@@ -102,38 +103,65 @@ h1 {
 .containerPost {
     display: flex;
     flex-direction: row-reverse;
-    margin: 1em 1em 0 0;
+    margin: 1em 1em 0 1em;
     justify-content: flex-end;
+    width: 60%;
 }
 
 .leftContainerPost {
     display: flex;
     flex-direction: column;
-    border: 1.5px solid goldenrod;
-}
-
-.rightContainerPost {
-    display: flex;
-    flex-direction: column;
-    border: 1.5px solid goldenrod;
-}
-
-.titlesSubredditsContainer {
-    display: flex;
-    flex-direction: column;
-    /*border: 1.5px solid goldenrod;*/
-    width: 40em;
+    border: 1.5px solid #685212;
 }
 
 .flexVotingInfo {
     display: flex;
     flex-direction: column;
+    border: 1.5px solid #685212;
+    margin: 0.8em;
+    padding: 0.6em;
 }
+
+.upvoteStyling {
+    
+}
+
+.downvoteStyling {
+    
+}
+
+.rightContainerPost {
+    display: flex;
+    flex-direction: column;
+    border: 0.1em solid #685212;
+}
+
+.titlesSubredditsContainer {
+    display: flex;
+    flex-direction: column;
+    border: 0.1em solid #685212;
+    width: 40em;
+    padding: 0 0 0.3em 0.6em;
+    margin: 0.8em;
+}
+
+.postCreatedBy {
+    border: 0.1em solid #685212;
+    padding: 0.6em;
+    margin-bottom: 0.8em;
+}
+
+.postDate {
+    border: 0.1em solid #685212;
+    padding: 0.6em;
+    margin-bottom: 0.8em;
+}
+
+
 
 
 .flexUsernameDate {
     display: flex;
-    flex-direction: row;
 }
 
 .createPostForm {
