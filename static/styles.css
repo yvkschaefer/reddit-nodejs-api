@@ -87,81 +87,103 @@ h1 {
     margin: auto;
 }
 
-.homepageCreatePost {
-    font-size: 2.2em;
-    margin-left: 1.4em;
-}
-
-.containerPosts {
-    padding: 0 0 0 0;
-    display: flex;
-    flex-direction: column;
-    /*border: 5px solid goldenrod;*/
-    justify-content: flex-start;
-}
-
-.containerPost {
-    display: flex;
-    flex-direction: row-reverse;
-    margin: 1em 1em 0 1em;
-    justify-content: flex-end;
-    width: 60%;
-}
-
-.leftContainerPost {
-    display: flex;
-    flex-direction: column;
-    border: 1.5px solid #685212;
-}
-
-.flexVotingInfo {
-    display: flex;
-    flex-direction: column;
-    border: 1.5px solid #685212;
-    margin: 0.8em;
-    padding: 0.6em;
-}
-
-.upvoteStyling {
+/*HOMEPAGE STYLINGS*/
     
-}
-
-.downvoteStyling {
+    .homepageCreatePost {
+        font-size: 2.2em;
+        margin-left: 1.4em;
+    }
     
-}
+    .containerPosts {
+        padding: 0 0 0 0;
+        display: flex;
+        flex-direction: column;
+        /*border: 5px solid goldenrod;*/
+        justify-content: flex-start;
+        margin: 1em 0 1em 1em;
+    }
+    
+    .containerPost {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        width: 60%;
+    }
+    
+    .leftContainerPost {
+        display: flex;
+        flex-direction: column;
+        border: 1.5px solid #685212;
+    }
+    
+    .flexVotingInfo {
+        display: flex;
+        flex-direction: column;
+        border: 1.5px solid #685212;
+        margin: 0.8em;
+        padding: 0.6em;
+    }
+    
+    .upvoteStyling {
+        
+    }
+    
+    .downvoteStyling {
+        
+    }
+    
+    .rightContainerPost {
+        display: flex;
+        flex-direction: column;
+        border: 0.1em solid #685212;
+    }
+    
+    .titlesSubredditsContainer {
+        display: flex;
+        flex-direction: column;
+        border: 0.1em solid #685212;
+        width: 40em;
+        padding: 0 0 0.3em 0.6em;
+        margin: 0.8em;
+    }
+    
+    .postCreatedBy {
+        border: 0.1em solid #685212;
+        padding: 0.6em;
+        margin-bottom: 0.8em;
+    }
+    
+    .postDate {
+        border: 0.1em solid #685212;
+        padding: 0.6em;
+        margin-bottom: 0.8em;
+    }
+    
+    .flexUsernameDate {
+        display: flex;
+    }
+    
+    .postTitles {
+        font-family: Montserrat;
+        margin-top: .4em;
+    }
 
-.rightContainerPost {
+
+/*CREATE POST PAGE STYLINGS*/
+
+.createPostContainer {
     display: flex;
     flex-direction: column;
-    border: 0.1em solid #685212;
 }
 
-.titlesSubredditsContainer {
+.urlTitleSubredditContainer {
     display: flex;
     flex-direction: column;
-    border: 0.1em solid #685212;
-    width: 40em;
-    padding: 0 0 0.3em 0.6em;
-    margin: 0.8em;
 }
 
-.postCreatedBy {
-    border: 0.1em solid #685212;
-    padding: 0.6em;
-    margin-bottom: 0.8em;
-}
-
-.postDate {
-    border: 0.1em solid #685212;
-    padding: 0.6em;
-    margin-bottom: 0.8em;
-}
-
-
-
-
-.flexUsernameDate {
+.titleCreatePost {
     display: flex;
+    flex-direction: column;
 }
 
 .createPostForm {
@@ -183,11 +205,6 @@ h1 {
     padding: 0.8em 0.8em 2em 0.8em;
     font-size:0.8em;
     color:rgba(199, 142, 199, 0.8);
-}
-
-.postTitles {
-    font-family: Montserrat;
-    margin-top: .4em;
 }
 
 .subredditsBox {

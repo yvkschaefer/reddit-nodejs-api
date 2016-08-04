@@ -63,7 +63,7 @@
 				  	</div>
 				  	<div class="flexVotingInfo">
 				  		<h4 class="voteScoreStyling">vote score: <%= post.voteScore %></h4>
-						<h4 class="voteHotnessStyling">vote hotness: <%= (post.voteHotness * 1000000).toFixed(2) %></h4>
+						<h4 class="voteHotnessStyling">vote hotness: <%= (post.voteHotness * 1000000).toFixed(1) %></h4>
 					</div>
 					<div>
 						<form action='/vote' method='post'>

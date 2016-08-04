@@ -6,12 +6,25 @@
          <title>create a post</title>
        </head>
        <body>
-        <form class = "createPostForm" action="/createPost" method="POST">
-            <input type="text" name="url" placeholder="URL for your post">
-            <input type="text" name="title" placeholder="your post's title">
-            <input type="text" name="subredditId" placeholder="subredditId">
-            <button type="submit" class="createPostButton">Create Post!</button>
-        </form>
+            <form class = "createPostForm" action="/createPost" method="POST">
+                <div class="createPostContainer">
+                    <div class="urlTitleSubredditContainer">
+                        <div class="urlItem">
+                            <input type="text" name="url" placeholder="URL for your post">
+                        </div>
+                        <div class="titleCreatePost">
+                            <div class="createPostTitleItem">
+                                <input type="text" name="title" placeholder="your post's title">
+                            </div>
+                            <button type="submit" class="suggestedTitle">suggest title</button>
+                        </div>
+                        <div>
+                            <input type="text" name="subredditId" placeholder="subredditId">
+                        </div>
+                    </div>
+                    <button type="submit" class="createPostButton">Create Post!</button>
+                </div>
+            </form>
         <div class="subredditsBox">
             <div class="subredditsBoxTitle">subreddits</div>
             <div class="subredditBoxes subredditId3">3: bicycles</div>
