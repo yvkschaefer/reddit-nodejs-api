@@ -1,40 +1,34 @@
-<!DOCTYPE html>
-     <html>
-       <head>
-         <link type="text/css" rel="stylesheet" href="/files/styles.css"/>
-         <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>
-         <title>create a post</title>
-       </head>
-       <body>
-            <form class = "createPostForm" action="/createPost" method="POST">
-                <div class="createPostContainer">
-                    <div class="urlTitleSubredditContainer">
-                        <div class="urlItem">
-                            <input type="text" name="url" placeholder="URL for your post">
-                        </div>
-                        <div class="titleCreatePost">
-                            <div class="createPostTitleItem">
-                                <input type="text" name="title" placeholder="your post's title">
-                            </div>
-                            <button type="submit" class="suggestedTitle">suggest title</button>
-                        </div>
-                        <div>
-                            <input type="text" name="subredditId" placeholder="subredditId">
-                        </div>
-                    </div>
-                    <button type="submit" class="createPostButton">Create Post!</button>
+<% layout('layout') -%>
+
+<div>
+    <form class="createPostForm" action="/createPost" method="POST">
+        <div class="createPostContainer">
+            <div class="urlTitleSubredditContainer">
+                <div class="urlItem">
+                    <input type="text" name="url" placeholder="URL for your post">
                 </div>
-            </form>
-        <div class="subredditsBox">
-            <div class="subredditsBoxTitle">subreddits</div>
-            <div class="subredditBoxes subredditId3">3: bicycles</div>
-            <div class="subredditBoxes subredditId4,">4: montreal culture</div>
-            <div class="subredditBoxes subredditId6">6: politics</div>
-            <div class="subredditBoxes subredditId7">7: health</div>
-            <div class="subredditBoxes subredditId8">8: other</div>
+                <div class="titleCreatePost">
+                    <div class="createPostTitleItem">
+                        <input type="text" name="title" placeholder="your post's title">
+                    </div>
+                    <button id="suggestTitleButton">suggest title</button>
+                </div>
+                <div>
+                    <input type="text" name="subredditId" placeholder="subredditId">
+                </div>
+            </div>
+            <button type="submit" class="createPostButton">Create Post!</button>
         </div>
-         <nav>
-           <a class="homepageCreatePost" href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>
-         </nav>
-       </body>
-     </html>
+    </form>
+    <div class="subredditsBox">
+        <div class="subredditsBoxTitle">subreddits</div>
+        <div class="subredditBoxes subredditId3">3: bicycles</div>
+        <div class="subredditBoxes subredditId4,">4: montreal culture</div>
+        <div class="subredditBoxes subredditId6">6: politics</div>
+        <div class="subredditBoxes subredditId7">7: health</div>
+        <div class="subredditBoxes subredditId8">8: other</div>
+    </div>
+    <nav>
+        <a class="homepageCreatePost" href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a>
+    </nav>
+</div>

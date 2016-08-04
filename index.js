@@ -3,7 +3,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-
+var  engine = require('ejs-mate');
 
 require('longjohn');
 var mysql = require('mysql');
@@ -23,6 +23,8 @@ var redditAPI = reddit(connection);
 var app = express();
 
 app.disable('x-powered-by');
+// use ejs-locals for all ejs templates: 
+app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({ //says every request that comes in through my express server, before going to the fn, it's going to go through another fn that's going to pre-process my request. helps me get more interesting request obj. this one parses the body.
@@ -36,7 +38,7 @@ app.use(checkLoginToken);
 
 
 app.get('/signup', function(request, response) {
-  response.render('signup.ejs');
+  response.render('signup.ejs', {title: 'signup'});
 });
 
 app.post('/signup', function(request, response) {
@@ -57,7 +59,7 @@ app.post('/signup', function(request, response) {
 });
 
 app.get('/login', function(request, response) {
-  response.render('login.ejs');
+  response.render('login.ejs', {title: 'login'});
 });
 
 app.post('/login', function(request, response) {
@@ -93,9 +95,7 @@ app.get('/', function(request , response) {
       //response.redirect('/error.ejs');
     }
     else {
-      response.render('homepage.ejs', {
-        posts: posts
-      });
+      response.render('homepage.ejs', {title: 'reddit: the front page of weeks four and five', posts: posts});
     }
   });
 });
@@ -126,7 +126,7 @@ app.post('/vote', function(request, response) {
 });
 
 app.get('/createPost', function(request, response) {
-  response.render('createpost.ejs');
+  response.render('createpost.ejs', {title: 'create a post'});
 });
 
 app.post('/createPost', function(request, response) {

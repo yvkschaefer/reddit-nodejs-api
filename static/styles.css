@@ -171,6 +171,12 @@ h1 {
 
 /*CREATE POST PAGE STYLINGS*/
 
+.suggestTitleButton {
+    
+}
+
+
+
 .createPostContainer {
     display: flex;
     flex-direction: column;

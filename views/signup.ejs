@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>signup</title>
-    <link type="text/css" rel="stylesheet" href="/files/styles.css"/>
-  </head>
-  <body>
-    <form action='/signup' method='POST'>
+<% layout('layout') -%>
+
+<div>
+  <form action='/signup' method='POST'>
       <input type='text' name='username' placeholder='choose your own unique username!'>
       <input type='password' name='password' placeholder="choose a password that isn't easy to guess!">
       <button type='submit'>Sign Up!</button>
@@ -15,5 +10,4 @@
       <h4>already signed up? login <a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/login">here</a></h4>
       <h4><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/">homepage</a></h4>
     </nav>
-  </body>
-</html>
+</div>

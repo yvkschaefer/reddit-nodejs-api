@@ -1,81 +1,82 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<link type="text/css" rel="stylesheet" href="/files/styles.css"/>
-	<link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto" rel="stylesheet">
-	<title>reddit: the front page of week four and five</title>
-</head>
-<body>
+<% layout('layout') -%>
+
+<div>
 	<nav>
 		<table>
 			<thead>
-			</thead>	
+			</thead>
 			<tbody>
-				<td><h3><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/login">Login</a></h3></td>
-				<td><h3><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/signup">Register</a></h3></td>
+				<td>
+					<h3><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/login">Login</a></h3></td>
+				<td>
+					<h3><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/signup">Register</a></h3></td>
 				<td>
 					<form action='/logout' method='post'>
-					<input type='hidden' name='logout' value='cookies'>
-					<button type='submit'><h2 class="logoutButton">Logout</h2></button>
+						<input type='hidden' name='logout' value='cookies'>
+						<button type='submit'><h2 class="logoutButton">Logout</h2></button>
 					</form>
 				</td>
 			</tbody>
 		</table>
 		<table>
-		<thead>
-		</thead>
-		<tbody>
-				<td><h3><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=top'>Top</a></h3></td>
-				<td><h3><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=hot'>Hot</a></h3></td>
-				<td><h3><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=new'>New</a></h3></td>
-				<td><h3><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=controversial'>Controversial</a></h3></td>
-		</tbody>
-	  </table>
-	  <div>
-	  	<h3><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/createPost">Create Post</a></h3>
-	  </div>
+			<thead>
+			</thead>
+			<tbody>
+				<td>
+					<h3><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=top'>Top</a></h3></td>
+				<td>
+					<h3><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=hot'>Hot</a></h3></td>
+				<td>
+					<h3><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=new'>New</a></h3></td>
+				<td>
+					<h3><a href='https://july-20-reddit-nodejs-yvkschaefer.c9users.io/?sort=controversial'>Controversial</a></h3></td>
+			</tbody>
+		</table>
+		<div>
+			<h3><a href="https://july-20-reddit-nodejs-yvkschaefer.c9users.io/createPost">Create Post</a></h3>
+		</div>
 	</nav>
-	  <aside>
-	  	<h1 class="typewriter">Welcome to reddit</h1>
-	  </aside>
-	  <main>
-	  <div class="containerPosts">
-	  	<% posts.forEach(function(post){ %>
-	  	<div class="containerPost">
-		  	<div class="rightContainerPost">
-			  	<div class="titlesSubredditsContainer">
-			  		<div><h2 class="postTitles"><a href='<%= post.url %>'><%= post.title %></a></h2></div>
-			  		<div><h4 class="subredditsStyling">/r/<%=post.subreddits.name %></h4></div>
-			  	</div>
-			  	<div class="flexUsernameDate">
-			  		<h4 class="postCreatedBy">posted by <%= post.user.username %></h4>
-			  		<h4 class="postDate">created <%= post.fromNow %></h4>
-			  	</div>
-			 </div>
-				 <div class="leftContainerPost">
-				  	<div>
-				  		<form action='/vote' method='post'>
-					  		<input type='hidden' name='vote' value='1'>
-					  		<input type='hidden' name='postId' value='<%= post.postId %>'>
-					  		<button type="submit" class="upvoteStyling">&#8593;</button>
-				  		</form>
-				  	</div>
-				  	<div class="flexVotingInfo">
-				  		<h4 class="voteScoreStyling">vote score: <%= post.voteScore %></h4>
-						<h4 class="voteHotnessStyling">vote hotness: <%= (post.voteHotness * 1000000).toFixed(1) %></h4>
+	<aside>
+		<h1 class="typewriter">Welcome to reddit</h1>
+	</aside>
+	<main>
+		<div class="containerPosts">
+			<% posts.forEach(function(post){ %>
+				<div class="containerPost">
+					<div class="rightContainerPost">
+						<div class="titlesSubredditsContainer">
+							<div>
+								<h2 class="postTitles"><a href='<%= post.url %>'><%= post.title %></a></h2></div>
+							<div>
+								<h4 class="subredditsStyling">/r/<%=post.subreddits.name %></h4></div>
+						</div>
+						<div class="flexUsernameDate">
+							<h4 class="postCreatedBy">posted by <%= post.user.username %></h4>
+							<h4 class="postDate">created <%= post.fromNow %></h4>
+						</div>
 					</div>
-					<div>
-						<form action='/vote' method='post'>
-							<input type='hidden' name='vote' value='-1'>
-							<input type='hidden' name='postId' value='<%= post.postId %>'>
-							<button type="submit" class="downvoteStyling">&#8595;</button>
-						</form>
+					<div class="leftContainerPost">
+						<div>
+							<form action='/vote' method='post'>
+								<input type='hidden' name='vote' value='1'>
+								<input type='hidden' name='postId' value='<%= post.postId %>'>
+								<button type="submit" class="upvoteStyling">&#8593;</button>
+							</form>
+						</div>
+						<div class="flexVotingInfo">
+							<h4 class="voteScoreStyling">vote score: <%= post.voteScore %></h4>
+							<h4 class="voteHotnessStyling">vote hotness: <%= (post.voteHotness * 1000000).toFixed(1) %></h4>
+						</div>
+						<div>
+							<form action='/vote' method='post'>
+								<input type='hidden' name='vote' value='-1'>
+								<input type='hidden' name='postId' value='<%= post.postId %>'>
+								<button type="submit" class="downvoteStyling">&#8595;</button>
+							</form>
+						</div>
 					</div>
-	  			</div>
-	  		</div>
-	  	<% }) %>
-	  	</div>
-	  </main>
-	</body>
-</html>
+				</div>
+				<% }) %>
+		</div>
+	</main>
+</div>
