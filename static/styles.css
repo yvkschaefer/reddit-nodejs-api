@@ -91,10 +91,6 @@ h1 {
     margin-left: 1.4em;
 }
 
-.logoutButton {
-    /*a small battle for another time*/
-}
-
 .containerPosts {
     padding: 0 0 0 0;
     display: flex;
@@ -105,46 +101,39 @@ h1 {
 
 .containerPost {
     display: flex;
-    flex-direction: row-reverse;
-    margin: 0 1em 5em 0;
+    flex-direction: column;
+    margin: 1em 1em 0 0;
+    justify-content: flex-start;
 }
 
 .leftContainerPosts {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     border: 1.5px solid goldenrod;
 }
 
 .rightContainerPosts {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     border: 1.5px solid goldenrod;
 }
 
 .titlesSubredditsContainer {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     border: 1.5px solid goldenrod;
+    width: 40em;
 }
 
 .flexVotingInfo {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 }
 
-.flexUpvote {
-    display: flex;
-    flex-direction: column;
-}
 
-.flexUsername {
+.flexUsernameDate {
     display: flex;
-    flex-direction: column;
-}
-
-.flexDate {
-    display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
 }
 
 .createPostForm {
