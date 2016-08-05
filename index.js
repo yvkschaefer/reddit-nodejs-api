@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var engine = require('ejs-mate');
 var request = require('request');
+var cheerio = require('cheerio');
 
 require('longjohn');
 var mysql = require('mysql');
@@ -159,15 +160,15 @@ app.post('/createPost', function(request, response) {
 
 app.get('/getTitle', function(req, response) {
   var url = req.query.url;
-  console.log('got here', url);
   request(url, function(err, titleResponse) {
     if (err) {
       console.log(err.stack);
       response.send('oops, error', err);
     }
     else {
-      var title = titleResponse.body.split('<title>')[1].split('</title>')[0];
-      console.log('hey title: ', title);
+     var $ = cheerio.load(titleResponse.body);
+     var title = $("title").text();
+      // var title = titleResponse.body.split('<title>')[1].split('</title>')[0];
       response.send({title: title});
     }
   });
