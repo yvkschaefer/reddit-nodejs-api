@@ -5,5 +5,5 @@ $(document).ready(function() {
         event.preventDefault();
         console.log('click!');
         // var url = $('input[name="url"]').val();
-    })
+    });
 });

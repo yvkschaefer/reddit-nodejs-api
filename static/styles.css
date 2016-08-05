@@ -119,9 +119,19 @@ h1 {
     .flexVotingInfo {
         display: flex;
         flex-direction: column;
-        border: 1.5px solid #685212;
+        border: 0.2em solid #685212;
         margin: 0.8em;
         padding: 0.6em;
+        width: 11em;
+    }
+    
+    .voteScoreStyling {
+        padding: 0.3em;
+        padding-bottom: 1em;
+    }
+    
+    .voteHotnessStyling {
+        padding: 0.3em;
     }
     
     .upvoteStyling {
@@ -141,20 +151,20 @@ h1 {
     .titlesSubredditsContainer {
         display: flex;
         flex-direction: column;
-        border: 0.1em solid #685212;
+        border: 0.2em solid #685212;
         width: 40em;
         padding: 0 0 0.3em 0.6em;
         margin: 0.8em;
     }
     
     .postCreatedBy {
-        border: 0.1em solid #685212;
+        border: 0.15em solid #685212;
         padding: 0.6em;
         margin-bottom: 0.8em;
     }
     
     .postDate {
-        border: 0.1em solid #685212;
+        border: 0.15em solid #685212;
         padding: 0.6em;
         margin-bottom: 0.8em;
     }
