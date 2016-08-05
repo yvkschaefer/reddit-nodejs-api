@@ -1,9 +1,10 @@
-//protocol + host: https://july-20-reddit-nodejs-yvkschaefer.c9users.io
+//protocol + host: https:/july-20-reddit-nodejs-yvkschaefer.c9users.io/
 
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var engine = require('ejs-mate');
+var request = require('request');
 
 require('longjohn');
 var mysql = require('mysql');
@@ -154,6 +155,22 @@ app.post('/createPost', function(request, response) {
   else {
     response.redirect('/login');
   }
+});
+
+app.get('/getTitle', function(req, response) {
+  var url = req.query.url;
+  console.log('got here', url);
+  request(url, function(err, titleResponse) {
+    if (err) {
+      console.log(err.stack);
+      response.send('oops, error', err);
+    }
+    else {
+      var title = titleResponse.body.split('<title>')[1].split('</title>')[0];
+      console.log('hey title: ', title);
+      response.send({title: title});
+    }
+  });
 });
 
 app.post('/logout', function(request, response) {

@@ -185,15 +185,39 @@ body {
 /*CREATE POST PAGE STYLINGS*/
 
 .suggestTitleButton {
-    
+    height: 2em;
+}
+
+.urlFromForm {
+    width: 30em;
+    height: 1.8em;
+}
+
+#titleField {
+    width: 30em;
+    height: 1.8em;
+}
+
+.subredditIdInput {
+    width: 30em;
+    height: 1.8em;
+}
+
+.urlPlease {
+    width: 6em;
+    height: 1em;
 }
 
 .unTitre {
     color: #F7DDDD;
+    width: 6em;
+    height: 1em;
 }
 
 .subredditPlease {
     color: #1abc9c;
+    width: 6em;
+    height: 1em;
 }
 
 .createPostContainer {
