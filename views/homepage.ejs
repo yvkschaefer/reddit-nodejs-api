@@ -60,7 +60,7 @@
 							<form action='/vote' method='post'>
 								<input type='hidden' name='vote' value='1'>
 								<input type='hidden' name='postId' value='<%= post.postId %>'>
-								<button type="submit" class="upvoteStyling">&#8593;</button>
+								<button type="submit" id="upvote">&#8593;</button>
 							</form>
 						</div>
 						<div class="flexVotingInfo">
@@ -71,7 +71,7 @@
 							<form action='/vote' method='post'>
 								<input type='hidden' name='vote' value='-1'>
 								<input type='hidden' name='postId' value='<%= post.postId %>'>
-								<button type="submit" class="downvoteStyling">&#8595;</button>
+								<button type="submit" id="downvote">&#8595;</button>
 							</form>
 						</div>
 					</div>

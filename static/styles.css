@@ -137,11 +137,11 @@ body {
         padding: 0.3em;
     }
     
-    .upvoteStyling {
+    #upvote {
         
     }
     
-    .downvoteStyling {
+    #downvote {
         
     }
     
@@ -183,117 +183,121 @@ body {
 
 
 /*CREATE POST PAGE STYLINGS*/
-
-.suggestTitleButton {
-    height: 2em;
-}
-
-.urlFromForm {
-    width: 30em;
-    height: 1.8em;
-}
-
-#titleField {
-    width: 30em;
-    height: 1.8em;
-}
-
-.subredditIdInput {
-    width: 30em;
-    height: 1.8em;
-}
-
-.urlPlease {
-    width: 6em;
-    height: 1em;
-}
-
-.unTitre {
-    color: #F7DDDD;
-    width: 6em;
-    height: 1em;
-}
-
-.subredditPlease {
-    color: #1abc9c;
-    width: 6em;
-    height: 1em;
-}
-
-.createPostContainer {
-    display: flex;
-    flex-direction: column;
-    margin: 1em 0 1em 0;
-}
-
-.urlTitleSubredditContainer {
-    display: flex;
-    flex-direction: column;
-    width: 20em;
-}
-
-.urlItem {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-}
-
-.createPostTitleItem {
-    display: flex;
-    justify-content: flex-start;
-}
-
-.subredditItem {
-    display: flex;
-    justify-content: flex-start;
-}
-
-.titleCreatePost {
-    display: flex;
-    flex-direction: column;
-}
-
-.createPostForm {
-    font-family: Source Sans Pro;
-    padding-top: 1em;
-    display: flex;
-    flex-direction: column;
-    width: 250px;
-    margin-left: 2em;
-}
-
-.createPostButton {
-    margin-left: 2em;
-    margin-top: 0.5em;
-    background: rgba(255, 255, 255, 0.2);
-    border: 0.3em white solid;
-    align-items: center;
-    border-radius: 0.2em;
-    padding: 0.8em 0.8em 2em 0.8em;
-    font-size:0.8em;
-    color:rgba(199, 142, 199, 0.8);
-}
-
-.subredditsBox {
-    color: white;
-    font-size: 1.5em;
-    text-align: left;
-    text-shadow: 4px 4px 0 rgba(0,0,0,0.1);
-    padding: 0.3em;
-    display: flex;
-    flex-direction: column;
-    width: 245px;
-    margin: 0 0 1em 2em;
-}
-
-/*can't get this to work, was hoping to make the box contents smaller than title*/
-.subredditsBoxes {
-    font-size: 1em;
-    padding-left: 1em;
-}
-
-.subredditId3 { background: #9b59b6;}
-.subredditId4 { background: #bdc3c7;}
-.subredditId6 { background: #3498db;}
-.subredditId7 { background: #34495e;}
-.subredditId8 { background: #1abc9c;}
+    
+    .suggestTitleButton {
+        height: 2em;
+    }
+    
+    .urlFromForm {
+        width: 30em;
+        height: 1.8em;
+    }
+    
+    #titleField {
+        width: 30em;
+        height: 1.8em;
+    }
+    
+    .subredditIdInput {
+        width: 30em;
+        height: 1.8em;
+    }
+    
+    .urlPlease {
+        width: 6em;
+        height: 1em;
+    }
+    
+    .unTitre {
+        color: #F7DDDD;
+        width: 6em;
+        height: 1em;
+    }
+    
+    .subredditPlease {
+        color: #1abc9c;
+        width: 6em;
+        height: 1em;
+    }
+    
+    .createPostContainer {
+        display: flex;
+        flex-direction: column;
+        margin: 1em 0 1em 0;
+    }
+    
+    .urlTitleSubredditContainer {
+        display: flex;
+        flex-direction: column;
+        width: 20em;
+    }
+    
+    .urlItem {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+    
+    .createPostTitleItem {
+        display: flex;
+        justify-content: flex-start;
+    }
+    
+    .subredditItem {
+        display: flex;
+        justify-content: flex-start;
+    }
+    
+    .titleCreatePost {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .createPostForm {
+        font-family: Source Sans Pro;
+        padding-top: 1em;
+        display: flex;
+        flex-direction: column;
+        width: 250px;
+        margin-left: 2em;
+    }
+    
+    .createPostButton {
+        margin-left: 2em;
+        margin-top: 0.5em;
+        background: rgba(255, 255, 255, 0.2);
+        border: 0.3em white solid;
+        align-items: center;
+        border-radius: 0.2em;
+        padding: 0.8em 0.8em 2em 0.8em;
+        font-size:0.8em;
+        color:rgba(199, 142, 199, 0.8);
+    }
+    
+    .subredditsBox {
+        color: white;
+        font-size: 1.5em;
+        text-align: left;
+        text-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+        padding: 0.3em;
+        display: flex;
+        flex-direction: column;
+        width: 245px;
+        margin: 0 0 1em 2em;
+    }
+    
+    /*can't get this to work, was hoping to make the box contents smaller than title*/
+    .subredditsBoxes {
+        font-size: 1em;
+        padding-left: 1em;
+    }
+    
+    .subredditId3 { background: #9b59b6;}
+    
+    .subredditId4 { background: #bdc3c7;}
+    
+    .subredditId6 { background: #3498db;}
+    
+    .subredditId7 { background: #34495e;}
+    
+    .subredditId8 { background: #1abc9c;}

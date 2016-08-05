@@ -110,7 +110,7 @@ app.get('/', function(request, response) {
 });
 
 app.post('/vote', function(request, response) {
-  console.log('vote postId', request.body.postId);
+  //console.log('vote postId', request.body.postId);
   if (request.loggedInUser) {
     var vote = {
       postId: parseInt(request.body.postId),
@@ -124,7 +124,7 @@ app.post('/vote', function(request, response) {
         response.redirect('/error.ejs');
       }
       else {
-        console.log(newVote);
+        //console.log(newVote);
         response.redirect('/');
       }
     });
@@ -168,7 +168,6 @@ app.get('/getTitle', function(req, response) {
     else {
      var $ = cheerio.load(titleResponse.body);
      var title = $("title").text();
-      // var title = titleResponse.body.split('<title>')[1].split('</title>')[0];
       response.send({title: title});
     }
   });
