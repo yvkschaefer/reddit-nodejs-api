@@ -3,7 +3,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var  engine = require('ejs-mate');
+var engine = require('ejs-mate');
 
 require('longjohn');
 var mysql = require('mysql');
@@ -38,7 +38,9 @@ app.use(checkLoginToken);
 
 
 app.get('/signup', function(request, response) {
-  response.render('signup.ejs', {title: 'signup'});
+  response.render('signup.ejs', {
+    title: 'signup'
+  });
 });
 
 app.post('/signup', function(request, response) {
@@ -59,7 +61,9 @@ app.post('/signup', function(request, response) {
 });
 
 app.get('/login', function(request, response) {
-  response.render('login.ejs', {title: 'login'});
+  response.render('login.ejs', {
+    title: 'login'
+  });
 });
 
 app.post('/login', function(request, response) {
@@ -87,7 +91,7 @@ app.post('/login', function(request, response) {
   });
 });
 
-app.get('/', function(request , response) {
+app.get('/', function(request, response) {
   redditAPI.getAllPosts(request.query.sort, function(err, posts) {
     if (err) {
       console.log(err);
@@ -95,7 +99,10 @@ app.get('/', function(request , response) {
       //response.redirect('/error.ejs');
     }
     else {
-      response.render('homepage.ejs', {title: 'reddit: the front page of weeks four and five', posts: posts});
+      response.render('homepage.ejs', {
+        title: 'reddit: the front page of weeks four and five',
+        posts: posts
+      });
     }
   });
 });
@@ -126,7 +133,9 @@ app.post('/vote', function(request, response) {
 });
 
 app.get('/createPost', function(request, response) {
-  response.render('createpost.ejs', {title: 'create a post'});
+  response.render('createpost.ejs', {
+    title: 'create a post'
+  });
 });
 
 app.post('/createPost', function(request, response) {
@@ -148,16 +157,21 @@ app.post('/createPost', function(request, response) {
 });
 
 app.post('/logout', function(request, response) {
-  redditAPI.deleteCookiesFromSession(request.loggedInUser.userId, function(err, result) {
-    if (err) {
-      console.log(err);
-      response.status(500).send('could not reach cookies');
-    }
-    else {
-      response.clearCookie('SESSION');
-      response.redirect('/');
-    }
-  });
+  if (request.loggedInUser) {
+    redditAPI.deleteCookiesFromSession(request.loggedInUser.userId, function(err, result) {
+      if (err) {
+        console.log(err);
+        response.status(500).send('could not reach cookies');
+      }
+      else {
+        response.clearCookie('SESSION');
+        response.redirect('/');
+      }
+    });
+  }
+  else {
+    response.redirect('/')
+  }
 });
 
 function checkLoginToken(request, response, next) {

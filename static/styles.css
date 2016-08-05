@@ -1,4 +1,10 @@
-/*post titles*/
+
+h1 {
+    font-size: 3em;
+    margin: auto;
+    margin-left: 1em;
+}
+
 h2 {
  font-family: sans-serif;
  color: #912588;
@@ -15,7 +21,7 @@ h3 {
     font-family: sans-serif;
     margin: auto;
     height: 40px;
-    color: blue;
+    color: #3498db;
 }
 
 h4 {
@@ -82,10 +88,7 @@ body {
   50% { border-color: orange; }
 }
 
-h1 {
-    font-size: 2em;
-    margin: auto;
-}
+
 
 /*HOMEPAGE STYLINGS*/
     
@@ -185,16 +188,40 @@ h1 {
     
 }
 
+.unTitre {
+    color: #F7DDDD;
+}
 
+.subredditPlease {
+    color: #1abc9c;
+}
 
 .createPostContainer {
     display: flex;
     flex-direction: column;
+    margin: 1em 0 1em 0;
 }
 
 .urlTitleSubredditContainer {
     display: flex;
     flex-direction: column;
+    width: 20em;
+}
+
+.urlItem {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.createPostTitleItem {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.subredditItem {
+    display: flex;
+    justify-content: flex-start;
 }
 
 .titleCreatePost {
@@ -204,7 +231,7 @@ h1 {
 
 .createPostForm {
     font-family: Source Sans Pro;
-    padding-top: 4em;
+    padding-top: 1em;
     display: flex;
     flex-direction: column;
     width: 250px;
@@ -232,7 +259,7 @@ h1 {
     display: flex;
     flex-direction: column;
     width: 245px;
-    margin-left: 2em;
+    margin: 0 0 1em 2em;
 }
 
 /*can't get this to work, was hoping to make the box contents smaller than title*/

@@ -1,23 +1,27 @@
 <% layout('layout') -%>
 
 <div>
+    <h1>create a post!</h1>
     <form class="createPostForm" action="/createPost" method="POST">
         <div class="createPostContainer">
             <div class="urlTitleSubredditContainer">
                 <div class="urlItem">
-                    <input type="text" name="url" placeholder="URL for your post">
+                    <div><h3>url please</h3></div>
+                    <div><input type="text" name="url" placeholder="URL for your post"></div>
                 </div>
                 <div class="titleCreatePost">
                     <div class="createPostTitleItem">
-                        <input type="text" name="title" placeholder="your post's title">
+                        <div><h3 class="unTitre">un titre</h3></div>
+                        <div><input type="text" name="title" placeholder="your post's title"></div>
+                        <div><button id="suggestTitleButton">suggest title</button></div>
                     </div>
-                    <button id="suggestTitleButton">suggest title</button>
                 </div>
-                <div>
-                    <input type="text" name="subredditId" placeholder="subredditId">
+                <div class="subredditItem">
+                    <div><h3 class="subredditPlease">subreddit id</h3></div>
+                    <div><input type="text" name="subredditId" placeholder="subredditId"></div>
                 </div>
             </div>
-            <button type="submit" class="createPostButton">Create Post!</button>
+            <button type="submit" class="createPostButton">create</button>
         </div>
     </form>
     <div class="subredditsBox">
